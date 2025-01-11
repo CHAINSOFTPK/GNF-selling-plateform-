@@ -87,42 +87,30 @@ router.get('/stats', async (req, res) => {
 // Purchase token
 router.post('/purchase', async (req, res) => {
     try {
-        const { address, tokenType, amount, paymentTxHash, referrer, bonusAmount } = req.body;
+        const { walletAddress, tokenSymbol, amount, paymentTxHash, referrer, bonusAmount } = req.body;
 
-        // Create purchase record
-        const purchase = new Purchase({
-            buyer: address.toLowerCase(),
-            tokenType,
-            amount,
-            paymentTxHash
-        });
-        await purchase.save();
-
-        // If there's a referrer, update their bonus
-        if (referrer) {
-            await Referral.findOneAndUpdate(
-                { 
-                    referrer: referrer.toLowerCase(),
-                    referred: address.toLowerCase()
-                },
-                { 
-                    $inc: { bonusAmount: bonusAmount },
-                    $push: { 
-                        purchases: {
-                            amount: amount,
-                            bonus: bonusAmount,
-                            timestamp: new Date()
-                        }
-                    }
-                },
-                { new: true }
-            );
+        // Validate required fields
+        if (!walletAddress || !tokenSymbol || !amount || !paymentTxHash) {
+            return res.status(400).json({
+                success: false,
+                message: 'Missing required fields'
+            });
         }
+
+        const purchase = new Purchase({
+            walletAddress,
+            tokenSymbol,
+            amount,
+            paymentTxHash,
+            referrer,
+            bonusAmount
+        });
+
+        await purchase.save();
 
         res.json({
             success: true,
-            message: 'Purchase successful',
-            data: purchase
+            message: 'Purchase recorded successfully'
         });
     } catch (error) {
         console.error('Purchase error:', error);

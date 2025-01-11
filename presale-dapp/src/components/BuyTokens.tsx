@@ -1,4 +1,5 @@
-import React, { useState, useEffect, ChangeEvent } from 'react';
+/** @jsxImportSource @emotion/react */
+import React, { useState, useEffect, ChangeEvent, HTMLAttributes } from 'react';
 import { toast } from 'react-toastify';
 import { ethers } from 'ethers';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -394,14 +395,14 @@ const BuyTokens: React.FC = () => {
             });
 
             // Add delay before calling the purchase API
-            await new Promise(resolve => setTimeout(resolve, 5000)); // 5 seconds delay
+            await new Promise(resolve => setTimeout(resolve, 5000));
 
             // Call purchase API with transaction hash
             const purchaseResult = await purchaseToken(
                 account,
                 selectedToken,
                 parseFloat(amount),
-                txHash // Ensure paymentTxHash is included
+                txHash
             );
 
             if (purchaseResult.success) {
@@ -417,17 +418,15 @@ const BuyTokens: React.FC = () => {
                 // Refresh token stats
                 const stats = await getTokenStats();
                 setTokens(stats);
+                
+                // If it's GNF10, fetch the updated balance
+                if (selectedToken === 'GNF10') {
+                    const balanceResponse = await axios.get(`${API_BASE_URL}/tokens/balance/${account}/GNF10`);
+                    setCurrentGNF10Balance(balanceResponse.data.balance || 0);
+                    setRemainingAllowance(200 - (balanceResponse.data.balance || 0));
+                }
             } else {
                 throw new Error(purchaseResult.message);
-            }
-
-            // After successful purchase, update the balance
-            if (purchaseResult.success && selectedToken === 'GNF10') {
-                await axios.post(`${API_BASE_URL}/tokens/update-balance`, {
-                    walletAddress: account,
-                    tokenSymbol: 'GNF10',
-                    amount: parseFloat(receivedAmount)
-                });
             }
 
         } catch (error: any) {
@@ -941,7 +940,8 @@ const BuyTokens: React.FC = () => {
                                         href="https://twitter.com/megapayer"
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="py-4 px-6 bg-[#1DA1F2] text-white rounded-xl flex items-center justify-center gap-3 shadow-lg hover:shadow-xl transition-all duration-200"
+                                        style={{ backgroundColor: '#349B93' }}
+                                        className="py-4 px-6 text-white rounded-xl flex items-center justify-center gap-3 shadow-lg hover:shadow-xl transition-all duration-200"
                                     >
                                         <FaTwitter size={20} />
                                         <span className="font-semibold">Twitter</span>
@@ -952,7 +952,8 @@ const BuyTokens: React.FC = () => {
                                         href="https://discord.gg/NVqRsTnQ"
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="py-4 px-6 bg-[#5865F2] text-white rounded-xl flex items-center justify-center gap-3 shadow-lg hover:shadow-xl transition-all duration-200"
+                                        style={{ backgroundColor: '#349B93' }}
+                                        className="py-4 px-6 text-white rounded-xl flex items-center justify-center gap-3 shadow-lg hover:shadow-xl transition-all duration-200"
                                     >
                                         <FaDiscord size={20} />
                                         <span className="font-semibold">Discord</span>
@@ -1018,7 +1019,8 @@ const BuyTokens: React.FC = () => {
                                         whileTap={{ scale: 0.98 }}
                                         onClick={handleSocialVerification}
                                         disabled={isSubmitting || !twitterHandle || !discordHandle}
-                                        className="w-full py-4 px-6 bg-gradient-to-r from-teal-500 to-cyan-500 text-white rounded-xl font-semibold shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+                                        style={{ backgroundColor: '#349B93' }}
+                                        className="w-full py-4 px-6 text-white rounded-xl font-semibold shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
                                     >
                                         {isSubmitting ? (
                                             <span className="flex items-center justify-center gap-2">

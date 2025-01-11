@@ -19,23 +19,19 @@ export const getTokenStats = async (): Promise<TokenStats[]> => {
 
 // Update the purchaseToken function to include txHash
 export const purchaseToken = async (
-    address: string,
-    tokenType: string,
+    walletAddress: string,
+    tokenSymbol: string,
     amount: number,
-    paymentTxHash: string,
-    options?: { referrer?: string | null }
+    paymentTxHash: string
 ) => {
     try {
-        // Calculate 2% bonus amount
-        const bonusAmount = amount * 0.02;
-
         const response = await axios.post(`${API_BASE_URL}/tokens/purchase`, {
-            address,
-            tokenType,
+            walletAddress,
+            tokenSymbol,
             amount,
             paymentTxHash,
-            referrer: options?.referrer || null,
-            bonusAmount // Include bonus amount in request
+            referrer: null,
+            bonusAmount: amount * 0.02 // 2% bonus
         });
         return response.data;
     } catch (error) {
