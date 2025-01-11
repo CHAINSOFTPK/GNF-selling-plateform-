@@ -80,7 +80,7 @@ export const Web3Provider: React.FC<{ children: React.ReactNode }> = ({ children
 
     const initializeUser = async (address: string) => {
         try {
-            const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:4000';
+            const apiUrl = process.env.REACT_APP_API_URL || 'http://153.92.222.4:4000';
             const response = await fetch(`${apiUrl}/api/users/initialize`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
