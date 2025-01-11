@@ -1,0 +1,65 @@
+@tailwind base;
+@tailwind components;
+@tailwind components;
+@tailwind utilities;
+
+@keyframes gradient-shift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+}
+
+@keyframes shimmer {
+    0% { transform: translateX(-150%) rotate(30deg); }
+    100% { transform: translateX(150%) rotate(30deg); }
+}
+
+@keyframes shine {
+  0% { transform: translateX(-100%) rotate(12deg); }
+  100% { transform: translateX(400%) rotate(12deg); }
+}
+
+/* ...existing styles... */
+
+@keyframes float {
+    0%, 100% { 
+        transform: translate(-50%, -50%) scale(1); 
+        opacity: 0.5;
+    }
+    50% { 
+        transform: translate(-50%, -50%) scale(1.2); 
+        opacity: 0.3;
+    }
+}
+
+/* ...rest of existing styles... */
+
+.animate-gradient-shift {
+    background-size: 400% 400%;
+    animation: gradient-shift 15s ease infinite;
+}
+
+/* ...existing code... */
+
+.group:hover .group-hover\:-translate-x-40 {
+  animation: shine 1.5s infinite;
+}
+
+/* Add smooth transition for background elements */
+.bg-gradient-to-b, .bg-gradient-to-t, .backdrop-blur-sm {
+    transition: all 0.3s ease-in-out;
+}
+
+/* Enhance image loading */
+img {
+    transition: opacity 0.3s ease-in-out;
+}
+
+@tailwind utilities;
+
+/* ...existing code... */

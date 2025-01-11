@@ -1,0 +1,62 @@
+.Toastify__toast {
+    border-radius: 12px !important;
+    padding: 16px !important;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12) !important;
+    backdrop-filter: blur(6px);
+}
+
+.Toastify__toast-body {
+    font-family: system-ui, -apple-system, sans-serif;
+    font-size: 0.95rem;
+}
+
+.Toastify__toast--success {
+    background: rgba(8, 180, 166, 0.95) !important;
+    border: 1px solid rgba(8, 180, 166, 0.2);
+}
+
+.Toastify__toast--error {
+    background: rgba(239, 68, 68, 0.95) !important;
+    border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.Toastify__progress-bar {
+    height: 3px !important;
+    opacity: 0.8;
+}
+
+.Toastify__toast-icon {
+    margin-right: 12px;
+    font-size: 1.2rem;
+}
+
+/* Animation for toast */
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOutRight {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}
+
+.Toastify__toast--animate-in {
+    animation: slideInRight 0.4s cubic-bezier(0.21, 1.02, 0.73, 1) forwards;
+}
+
+.Toastify__toast--animate-out {
+    animation: slideOutRight 0.4s cubic-bezier(0.06, 0.71, 0.55, 1) forwards;
+}
