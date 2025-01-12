@@ -24,7 +24,7 @@ import { usePublicClient, useWalletClient } from 'wagmi';
 import { validateAmount, safeParseFloat } from '../utils/validation';
 import FAQ from './FAQ';
 
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:4000/api';
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://153.92.222.4:4000/api';
 const TOKEN_CONFIGS: Record<string, TokenConfig> = {
     GNF10: {
         symbol: 'GNF10',
