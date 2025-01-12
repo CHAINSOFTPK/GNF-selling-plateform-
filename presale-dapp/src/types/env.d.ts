@@ -4,6 +4,6 @@ declare namespace NodeJS {
     API_BASE_URL: string;
     TOKEN_CONTRACT_ADDRESS: string;
     USDT_CONTRACT_ADDRESS: string;
-    USDC_CONTRACT_ADDRESS: string;
+    BUSD_CONTRACT_ADDRESS: string;
   }
 }

@@ -1,0 +1,24 @@
+
+.rainbow-kit-modal {
+  max-width: 480px !important;
+  border-radius: 16px !important;
+  background-color: #fefefe !important;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15) !important;
+  padding: 0 16px !important;
+}
+
+.rainbow-kit-modal-content {
+  border-radius: 12px !important;
+  transition: all 0.3s ease !important;
+  margin: 16px 0 !important;
+}
+
+.rainbow-kit-wallet-item {
+  border-radius: 8px !important;
+  margin-bottom: 8px !important;
+  transition: transform 0.2s ease-in-out !important;
+}
+
+.rainbow-kit-wallet-item:hover {
+  transform: translateY(-3px) !important;
+}

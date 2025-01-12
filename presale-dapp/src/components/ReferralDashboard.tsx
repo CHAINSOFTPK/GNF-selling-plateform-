@@ -12,6 +12,7 @@ import { formatNumber } from '../utils/formatters';
 import { checkSocialStatus } from '../services/socialVerificationService';
 import { getClaimableTokens, claimTokens } from '../services/tokenService';
 import { getUserPurchases, getUserTotalPurchases } from '../services/userService';
+import { TOKEN_CONTRACTS } from '../config/tokens';
 
 interface Referral {
     id: string;
@@ -231,114 +232,81 @@ const ReferralDashboard: React.FC = () => {
                 Token Holdings
             </h2>
             <div className="grid grid-cols-1 gap-6">
-                {/* GNF10 Card */}
-                <div className="bg-white rounded-xl shadow-md border border-[#08B4A6]/20 overflow-hidden">
-                    <div className="bg-gradient-to-r from-[#08B4A6] to-[#079e92] px-6 py-4">
-                        <h3 className="text-white text-xl font-bold">GNF10</h3>
-                        <p className="text-white/80 text-sm">For verified social media followers</p>
-                    </div>
-                    <div className="p-6">
-                        <div className="flex justify-between items-center mb-4">
-                            <p className="text-gray-600">Your Balance</p>
-                            <p className="text-2xl font-bold">
-                                {formatNumber(holdings.find(h => h.tokenSymbol === 'GNF10')?.amount || 0)} GNF10
-                            </p>
+                {Object.entries(TOKEN_CONTRACTS).map(([key, token]) => (
+                    <div key={key} className="bg-white rounded-xl shadow-md border border-[#08B4A6]/20 overflow-hidden">
+                        <div className="bg-gradient-to-r from-[#08B4A6] to-[#079e92] px-6 py-4">
+                            <div className="flex justify-between items-center">
+                                <div>
+                                    <h3 className="text-white text-xl font-bold">{token.symbol}</h3>
+                                    <p className="text-white/80 text-sm">
+                                        {token.vestingPeriod === 0 ? 'No vesting period' : 
+                                         token.vestingPeriod === 365 ? '1 year vesting' : '3 years vesting'}
+                                    </p>
+                                </div>
+                                <div className="flex flex-col items-end">
+                                    <a 
+                                        href={`https://etherscan.io/token/${token.address}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="text-white/60 text-xs font-mono hover:text-white/90 transition-colors"
+                                    >
+                                        {token.address.slice(0, 6)}...{token.address.slice(-4)}
+                                    </a>
+                                    <span className="text-white/60 text-xs mt-1">Contract Address</span>
+                                </div>
+                            </div>
                         </div>
-                        {(holdings.find(h => h.tokenSymbol === 'GNF10')?.amount ?? 0) > 0 && (
-                            <button
-                                onClick={() => handleClaim(holdings.find(h => h.tokenSymbol === 'GNF10')?.purchaseId || '')}
-                                style={{ backgroundColor: '#08B4A6' }}
-                                className="w-full py-2 text-white rounded-lg font-medium"
-                            >
-                                Available for Transfer
-                            </button>
-                        )}
-                    </div>
-                </div>
-
-                {/* GNF1000 Card */}
-                <div className="bg-white rounded-xl shadow-md border border-[#08B4A6]/20 overflow-hidden">
-                    <div className="bg-gradient-to-r from-[#08B4A6] to-[#079e92] px-6 py-4">
-                        <h3 className="text-white text-xl font-bold">GNF1000</h3>
-                        <p className="text-white/80 text-sm">1 year vesting period</p>
-                    </div>
-                    <div className="p-6">
-                        <div className="flex justify-between items-center mb-4">
-                            <p className="text-gray-600">Your Balance</p>
-                            <p className="text-2xl font-bold">
-                                {formatNumber(holdings.find(h => h.tokenSymbol === 'GNF1000')?.amount || 0)} GNF1000
-                            </p>
-                        </div>
-                        {holdings.find(h => h.tokenSymbol === 'GNF1000') && (
-                            <div>
-                                <div className="mb-4">
-                                    <div className="flex justify-between text-sm mb-2">
-                                        <span>Vesting Progress</span>
-                                        <span>{holdings.find(h => h.tokenSymbol === 'GNF1000')?.remainingDays} days left</span>
-                                    </div>
-                                    <div className="w-full bg-gray-200 rounded-full h-2">
-                                        <div 
-                                            className="bg-[#08B4A6] h-2 rounded-full"
-                                            style={{ 
-                                                width: `${100 - ((holdings.find(h => h.tokenSymbol === 'GNF1000')?.remainingDays || 0) / 365 * 100)}%`
-                                            }}
-                                        ></div>
+                        <div className="p-6">
+                            <div className="flex justify-between items-center mb-4">
+                                <p className="text-gray-600">Your Balance</p>
+                                <p className="text-2xl font-bold">
+                                    {formatNumber(holdings.find(h => h.tokenSymbol === token.symbol)?.amount || 0)} {token.symbol}
+                                </p>
+                            </div>
+                            {holdings.find(h => h.tokenSymbol === token.symbol) && (
+                                <div>
+                                    {token.vestingPeriod > 0 && (
+                                        <div className="mb-4">
+                                            <div className="flex justify-between text-sm mb-2">
+                                                <span>Vesting Progress</span>
+                                                <span>{holdings.find(h => h.tokenSymbol === token.symbol)?.remainingDays} days left</span>
+                                            </div>
+                                            <div className="w-full bg-gray-200 rounded-full h-2">
+                                                <div 
+                                                    className="bg-[#08B4A6] h-2 rounded-full"
+                                                    style={{ 
+                                                        width: `${100 - ((holdings.find(h => h.tokenSymbol === token.symbol)?.remainingDays || 0) / token.vestingPeriod * 100)}%`
+                                                    }}
+                                                ></div>
+                                            </div>
+                                        </div>
+                                    )}
+                                    <div className="space-y-2">
+                                        <button
+                                            onClick={() => handleClaim(holdings.find(h => h.tokenSymbol === token.symbol)?.purchaseId || '')}
+                                            disabled={!holdings.find(h => h.tokenSymbol === token.symbol)?.isClaimable}
+                                            style={{ backgroundColor: holdings.find(h => h.tokenSymbol === token.symbol)?.isClaimable ? '#08B4A6' : '#gray-400' }}
+                                            className="w-full py-2 text-white rounded-lg font-medium disabled:opacity-50"
+                                        >
+                                            {holdings.find(h => h.tokenSymbol === token.symbol)?.isClaimable ? 'Claim Now' : 'Vesting in Progress'}
+                                        </button>
+                                        <div className="flex items-center justify-center gap-2 mt-2">
+                                            <a 
+                                                href={`https://etherscan.io/token/${token.address}`}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="text-center text-sm text-[#08B4A6] hover:underline flex items-center gap-1"
+                                            >
+                                                <span>View on Etherscan</span>
+                                                <FaArrowRight size={12} />
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
-                                <button
-                                    onClick={() => handleClaim(holdings.find(h => h.tokenSymbol === 'GNF1000')?.purchaseId || '')}
-                                    disabled={!holdings.find(h => h.tokenSymbol === 'GNF1000')?.isClaimable}
-                                    style={{ backgroundColor: holdings.find(h => h.tokenSymbol === 'GNF1000')?.isClaimable ? '#08B4A6' : '#gray-400' }}
-                                    className="w-full py-2 text-white rounded-lg font-medium disabled:opacity-50"
-                                >
-                                    {holdings.find(h => h.tokenSymbol === 'GNF1000')?.isClaimable ? 'Claim Now' : 'Vesting in Progress'}
-                                </button>
-                            </div>
-                        )}
-                    </div>
-                </div>
-
-                {/* GNF10000 Card */}
-                <div className="bg-white rounded-xl shadow-md border border-[#08B4A6]/20 overflow-hidden">
-                    <div className="bg-gradient-to-r from-[#08B4A6] to-[#079e92] px-6 py-4">
-                        <h3 className="text-white text-xl font-bold">GNF10000</h3>
-                        <p className="text-white/80 text-sm">3 years vesting period</p>
-                    </div>
-                    <div className="p-6">
-                        <div className="flex justify-between items-center mb-4">
-                            <p className="text-gray-600">Your Balance</p>
-                            <p className="text-2xl font-bold">
-                                {formatNumber(holdings.find(h => h.tokenSymbol === 'GNF10000')?.amount || 0)} GNF10000
-                            </p>
+                            )}
                         </div>
-                        {holdings.find(h => h.tokenSymbol === 'GNF10000') && (
-                            <div>
-                                <div className="mb-4">
-                                    <div className="flex justify-between text-sm mb-2">
-                                        <span>Vesting Progress</span>
-                                        <span>{holdings.find(h => h.tokenSymbol === 'GNF10000')?.remainingDays} days left</span>
-                                    </div>
-                                    <div className="w-full bg-gray-200 rounded-full h-2">
-                                        <div 
-                                            className="bg-[#08B4A6] h-2 rounded-full"
-                                            style={{ 
-                                                width: `${100 - ((holdings.find(h => h.tokenSymbol === 'GNF10000')?.remainingDays || 0) / 1095 * 100)}%`
-                                            }}
-                                        ></div>
-                                    </div>
-                                </div>
-                                <button
-                                    onClick={() => handleClaim(holdings.find(h => h.tokenSymbol === 'GNF10000')?.purchaseId || '')}
-                                    disabled={!holdings.find(h => h.tokenSymbol === 'GNF10000')?.isClaimable}
-                                    style={{ backgroundColor: holdings.find(h => h.tokenSymbol === 'GNF10000')?.isClaimable ? '#08B4A6' : '#gray-400' }}
-                                    className="w-full py-2 text-white rounded-lg font-medium disabled:opacity-50"
-                                >
-                                    {holdings.find(h => h.tokenSymbol === 'GNF10000')?.isClaimable ? 'Claim Now' : 'Vesting in Progress'}
-                                </button>
-                            </div>
-                        )}
                     </div>
-                </div>
+                ))}
             </div>
         </motion.div>
     );

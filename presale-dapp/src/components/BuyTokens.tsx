@@ -20,8 +20,11 @@ import { BsLightningCharge, BsShieldCheck, BsGraphUp } from 'react-icons/bs';
 import { AiOutlineFieldTime } from 'react-icons/ai';
 import AnimatedBackground from './AnimatedBackground';
 import { RiShieldLine } from 'react-icons/ri';
+import { usePublicClient, useWalletClient } from 'wagmi';
+import { validateAmount, safeParseFloat } from '../utils/validation';
+import FAQ from './FAQ';
 
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://153.92.222.4:4000/api';
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:4000/api';
 const TOKEN_CONFIGS: Record<string, TokenConfig> = {
     GNF10: {
         symbol: 'GNF10',
@@ -114,9 +117,11 @@ const quotes = [
 const BuyTokens: React.FC = () => {
     const { referrerAddress } = useParams();
     const navigate = useNavigate();
-    const { account, connectWallet, provider } = useWallet();
+    const { account, connectWallet } = useWallet();
+    const { data: walletClient } = useWalletClient();
+    const publicClient = usePublicClient();
     
-    // Add isConnected check
+    // Replace provider references with publicClient or walletClient
     const isConnected = !!account;
     
     // State declarations
@@ -138,6 +143,26 @@ const BuyTokens: React.FC = () => {
     const [currentGNF10Balance, setCurrentGNF10Balance] = useState<number>(0);
     const [remainingAllowance, setRemainingAllowance] = useState<number>(200);
     const [currentQuote, setCurrentQuote] = useState(0);
+
+    // 1) Define a mapping of token decimals
+    const PAYMENT_TOKEN_DECIMALS: Record<string, number> = {
+        USDT: 6,
+        BUSD: 18,
+        GNF: 18,
+        // ...add others as needed...
+    };
+
+    // Add this function for GNF10 balance updates
+    const updateGNF10Balance = async () => {
+        if (!account) return;
+        try {
+            const balanceResponse = await axios.get(`${API_BASE_URL}/tokens/balance/${account}/GNF10`);
+            setCurrentGNF10Balance(balanceResponse.data.balance || 0);
+            setRemainingAllowance(200 - (balanceResponse.data.balance || 0));
+        } catch (error) {
+            console.error('Error updating GNF10 balance:', error);
+        }
+    };
 
     // Calculate received amount when amount changes
     useEffect(() => {
@@ -338,10 +363,17 @@ const BuyTokens: React.FC = () => {
         
         setIsApproving(true);
         try {
+            // Validate amount first
+            if (!validateAmount(amount, selectedToken || '')) {
+                throw new Error('Invalid amount');
+            }
+
+            const decimals = PAYMENT_TOKEN_DECIMALS[paymentToken] || 18;
             await approveToken(paymentToken, amount);
             setHasAllowance(true);
             toast.success(`${paymentToken} approved successfully`);
         } catch (error: any) {
+            console.error('Approval error:', error);
             toast.error(error.message || 'Failed to approve token');
             setHasAllowance(false);
         } finally {
@@ -349,14 +381,19 @@ const BuyTokens: React.FC = () => {
         }
     };
 
-    // Update the handlePurchaseConfirm function to include max token check
     const handlePurchaseConfirm = async () => {
         if (!selectedToken || !amount || !account) return;
 
         setLoading(true);
         let transferToastId = null;
+        
         try {
-            // For GNF10, check balance limit first
+            // Validate amount
+            if (!validateAmount(amount, selectedToken)) {
+                throw new Error('Invalid amount');
+            }
+
+            // GNF10 limit check
             if (selectedToken === 'GNF10') {
                 const limitCheck = await axios.post(`${API_BASE_URL}/tokens/check-purchase-limit`, {
                     walletAddress: account,
@@ -364,78 +401,83 @@ const BuyTokens: React.FC = () => {
                 });
 
                 if (!limitCheck.data.allowed) {
-                    throw new Error(`Purchase would exceed maximum limit of 200 GNF10 tokens. Current balance: ${limitCheck.data.currentBalance}`);
+                    throw new Error(`Purchase would exceed maximum limit of 200 GNF10 tokens.`);
                 }
             }
 
-            // Rest of your existing purchase logic...
+            // Check balance with proper decimal handling
             const balance = await getTokenBalance(paymentToken, account);
-            if (parseFloat(balance) < parseFloat(amount)) {
+            const decimals = PAYMENT_TOKEN_DECIMALS[paymentToken] || 18;
+            const parsedAmount = ethers.utils.parseUnits(amount, decimals);
+            const parsedBalance = ethers.utils.parseUnits(balance, decimals);
+
+            if (parsedBalance.lt(parsedAmount)) {
                 throw new Error(`Insufficient ${paymentToken} balance`);
             }
 
-            // Verify allowance again before proceeding
-            const currentAllowance = await checkAllowance(paymentToken, account);
-            if (!currentAllowance) {
+            // Verify allowance
+            const hasAllowance = await checkAllowance(paymentToken, account);
+            if (!hasAllowance) {
                 throw new Error(`Please approve ${paymentToken} spending first`);
             }
 
-            // Transfer the payment token
             transferToastId = toast.info('Transferring payment...', { 
                 autoClose: false, 
                 toastId: 'transfer' 
             });
 
+            // Transfer tokens with proper decimal handling
             const txHash = await transferToken(paymentToken, amount);
-            
-            // Wait for a few blocks for transaction confirmation
+
             toast.update(transferToastId, { 
                 render: 'Payment confirmed! Processing purchase...', 
                 type: 'info' 
             });
 
-            // Add delay before calling the purchase API
-            await new Promise(resolve => setTimeout(resolve, 5000));
-
-            // Call purchase API with transaction hash
+            // Process purchase
             const purchaseResult = await purchaseToken(
                 account,
                 selectedToken,
-                parseFloat(amount),
-                txHash
+                safeParseFloat(amount),
+                txHash,
+                paymentToken
             );
 
             if (purchaseResult.success) {
-                toast.dismiss(transferToastId);
-                toast.success(
-                    selectedToken === 'GNF10' 
-                        ? 'Tokens transferred successfully!' 
-                        : 'Purchase successful! Tokens will be available after vesting period.'
-                );
-                setSelectedToken(null);
-                setAmount('');
-                
-                // Refresh token stats
-                const stats = await getTokenStats();
-                setTokens(stats);
-                
-                // If it's GNF10, fetch the updated balance
-                if (selectedToken === 'GNF10') {
-                    const balanceResponse = await axios.get(`${API_BASE_URL}/tokens/balance/${account}/GNF10`);
-                    setCurrentGNF10Balance(balanceResponse.data.balance || 0);
-                    setRemainingAllowance(200 - (balanceResponse.data.balance || 0));
-                }
+                await handlePurchaseSuccess(selectedToken);
             } else {
-                throw new Error(purchaseResult.message);
+                throw new Error(purchaseResult.message || 'Purchase failed');
             }
 
         } catch (error: any) {
-            if (transferToastId) toast.dismiss(transferToastId);
-            toast.error(error.message || 'Purchase failed');
-            console.error('Purchase error:', error);
+            handlePurchaseError(error, transferToastId);
         } finally {
             setLoading(false);
         }
+    };
+
+    const handlePurchaseSuccess = async (selectedToken: string) => {
+        toast.success(
+            selectedToken === 'GNF10' 
+                ? 'Tokens transferred successfully!' 
+                : 'Purchase successful! Tokens will be available after vesting period.'
+        );
+        
+        setSelectedToken(null);
+        setAmount('');
+        
+        const stats = await getTokenStats();
+        setTokens(stats);
+        
+        if (selectedToken === 'GNF10') {
+            updateGNF10Balance();
+        }
+    };
+
+    const handlePurchaseError = (error: any, toastId: string | number | null) => {
+        if (toastId) toast.dismiss(toastId);
+        toast.error(error.message || 'Purchase failed');
+        console.error('Purchase error:', error);
     };
 
     const handleSocialVerification = async () => {
@@ -470,9 +512,18 @@ const BuyTokens: React.FC = () => {
     // Modify the amount change handler to validate GNF10 limits
     const handleAmountChange = (e: ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
+        if (value === '' || value === '0') {
+            setAmount('');
+            return;
+        }
+
+        const numericValue = safeParseFloat(value);
+        if (numericValue <= 0) {
+            return;
+        }
         
         if (selectedToken === 'GNF10') {
-            const tokenAmount = parseFloat(value) / TOKEN_CONFIGS.GNF10.price;
+            const tokenAmount = numericValue / TOKEN_CONFIGS.GNF10.price;
             if (tokenAmount > remainingAllowance) {
                 toast.error(`Maximum remaining purchase allowed: ${remainingAllowance} GNF10 tokens`);
                 const maxAmount = remainingAllowance * TOKEN_CONFIGS.GNF10.price;
@@ -699,25 +750,12 @@ const BuyTokens: React.FC = () => {
             {/* Add new buttons container after the token cards */}
             <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 py-12">
                 <div className="flex flex-col md:flex-row justify-center items-center gap-6">
-                    <motion.a
-                        href="/about"
-                        whileHover={{ 
-                            scale: 1.05,
-                            boxShadow: '0 0 25px rgba(54, 212, 199, 0.5)'
-                        }}
-                        whileTap={{ scale: 0.95 }}
-                        style={{ backgroundColor: '#3EACA3' }}
-                        className="group relative inline-flex items-center justify-center px-8 py-4 overflow-hidden font-bold rounded-xl text-white shadow-2xl transition-all duration-300"
-                    >
-                        <span className="absolute right-0 w-8 h-32 -mt-12 transition-all duration-1000 transform translate-x-12 bg-white opacity-10 rotate-12 group-hover:-translate-x-40 ease"></span>
-                        <span className="relative flex items-center gap-2">
-                            <BsShieldCheck className="text-xl" />
-                            Know About Us
-                        </span>
-                    </motion.a>
+                   
 
                     <motion.a
-                        href="/whitepaper"
+                        href="/whitepaper.pdf"  // PDF should be in public folder
+                        target="_blank"
+                        rel="noopener noreferrer"
                         whileHover={{ 
                             scale: 1.05,
                             boxShadow: '0 0 25px rgba(54, 212, 199, 0.5)'
@@ -734,6 +772,16 @@ const BuyTokens: React.FC = () => {
                     </motion.a>
                 </div>
             </div>
+
+            {/* Add FAQ section here */}
+            <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 }}
+                className="relative z-10"
+            >
+                <FAQ />
+            </motion.div>
 
             {/* Enhanced Purchase Modal */}
             <AnimatePresence>
@@ -799,7 +847,7 @@ const BuyTokens: React.FC = () => {
                                 {/* Payment Token Selection */}
                                 <div className="space-y-2">
                                     <label className="block text-sm font-semibold text-gray-700">
-                                        Payment Token
+                                        Payment Token(ERC20) 
                                     </label>
                                     <div className="relative">
                                         <select
@@ -808,8 +856,8 @@ const BuyTokens: React.FC = () => {
                                             className="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent text-lg appearance-none cursor-pointer transition-all duration-200"
                                         >
                                             <option value="USDT">USDT</option>
+                                            <option value="BUSD">BUSD</option>
                                             <option value="USDC">USDC</option>
-                                            <option value="FUSD">FUSD</option>
                                         </select>
                                         <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
                                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

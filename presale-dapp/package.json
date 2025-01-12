@@ -11,9 +11,12 @@
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
+    "@rainbow-me/rainbowkit": "^2.2.1",
+    "@tanstack/react-query": "^5.64.0",
     "@types/react-router-dom": "^5.3.3",
+    "@wagmi/core": "^2.16.3",
     "chart.js": "^4.0.0",
-    "ethers": "^5.4.0",
+    "ethers": "^5.7.2",
     "framer-motion": "^11.17.0",
     "install": "^0.13.0",
     "mongodb": "^4.1.0",
@@ -29,7 +32,9 @@
     "react-router-dom": "^7.1.1",
     "react-scripts": "5.0.1",
     "react-toastify": "^11.0.2",
-    "tailwindcss": "^2.2.19"
+    "tailwindcss": "^2.2.19",
+    "viem": "^2.22.7",
+    "wagmi": "^2.14.7"
   },
   "devDependencies": {
     "@types/mongoose": "^5.11.97",

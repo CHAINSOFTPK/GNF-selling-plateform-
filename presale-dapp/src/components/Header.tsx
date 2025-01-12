@@ -44,7 +44,7 @@ const Header: React.FC = () => {
                 <div className="flex-1 flex justify-center items-center relative pointer-events-auto" style={{ marginLeft: '130px' }}>
                     <div className="flex items-center space-x-6">
                         <a 
-                            href="https://t.me/yourgroup" 
+                            href="https://t.me/megapayer" 
                             target="_blank" 
                             rel="noopener noreferrer"
                             className="text-[#08B4A6] hover:text-[#079e92] transition-colors duration-300 hover:scale-110 transform pointer-events-auto"
@@ -52,7 +52,7 @@ const Header: React.FC = () => {
                             <FaTelegram size={24} style={{ color: '#08B4A6' }} />
                         </a>
                         <a 
-                            href="https://twitter.com/yourprofile" 
+                            href="https://twitter.com/megapayer" 
                             target="_blank" 
                             rel="noopener noreferrer"
                             className="text-[#08B4A6] hover:text-[#079e92] transition-colors duration-300 hover:scale-110 transform pointer-events-auto"
@@ -60,7 +60,7 @@ const Header: React.FC = () => {
                             <FaTwitter size={24} style={{ color: '#08B4A6' }} />
                         </a>
                         <a 
-                            href="https://discord.gg/yourinvite" 
+                            href="https://discord.gg/NVqRsTnQ" 
                             target="_blank" 
                             rel="noopener noreferrer"
                             className="text-[#08B4A6] hover:text-[#079e92] transition-colors duration-300 hover:scale-110 transform pointer-events-auto"
@@ -68,21 +68,14 @@ const Header: React.FC = () => {
                             <FaDiscord size={24} style={{ color: '#08B4A6' }} />
                         </a>
                         <a 
-                            href="https://youtube.com/@yourchannel" 
+                            href="https://www.youtube.com/@Megapayer_io" 
                             target="_blank" 
                             rel="noopener noreferrer"
                             className="text-[#08B4A6] hover:text-[#079e92] transition-colors duration-300 hover:scale-110 transform pointer-events-auto"
                         >
                             <FaYoutube size={24} style={{ color: '#08B4A6' }} />
                         </a>
-                        <a 
-                            href="https://yourwebsite.com" 
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                            className="text-[#08B4A6] hover:text-[#079e92] transition-colors duration-300 hover:scale-110 transform pointer-events-auto"
-                        >
-                            <FaGlobe size={24} style={{ color: '#08B4A6' }} />
-                        </a>
+                       
                     </div>
                 </div>
 
@@ -102,7 +95,7 @@ const Header: React.FC = () => {
                         </>
                     )}
                     <div className="pointer-events-auto">
-                        <ConnectWallet icon={<BiWallet className="mr-2" />} />
+                        <ConnectWallet /> {/* Remove icon prop */}
                     </div>
                 </div>
             </div>
@@ -165,14 +158,7 @@ const Header: React.FC = () => {
                                 >
                                     <FaYoutube size={24} style={{ color: '#08B4A6' }} />
                                 </a>
-                                <a 
-                                    href="https://yourwebsite.com" 
-                                    target="_blank" 
-                                    rel="noopener noreferrer"
-                                    className="text-[#08B4A6] hover:text-[#079e92] transition-colors duration-300 hover:scale-110 transform"
-                                >
-                                    <FaGlobe size={24} style={{ color: '#08B4A6' }} />
-                                </a>
+                                
                             </div>
 
                             {/* Buttons - Mobile */}
@@ -186,7 +172,7 @@ const Header: React.FC = () => {
                                         <span>Dashboard</span>
                                     </button>
                                 )}
-                                <ConnectWallet icon={<BiWallet className="mr-2" />} />
+                                <ConnectWallet /> {/* Remove icon prop here too */}
                             </div>
                         </div>
                     </div>

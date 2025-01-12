@@ -1,34 +1,100 @@
 import React from 'react';
-import { useWallet } from '../context/Web3Context'; // Changed from WalletContext
+import { ConnectButton } from '@rainbow-me/rainbowkit';
+import { motion } from 'framer-motion';
+import { BiWallet } from 'react-icons/bi';
+import { mainnet } from 'viem/chains';
 
-interface ConnectWalletProps {
-    icon?: React.ReactNode;
-}
-
-const ConnectWallet: React.FC<ConnectWalletProps> = ({ icon }) => {
-    const { account, connectWallet, disconnectWallet } = useWallet(); // Updated to match Web3Context
-    const isConnected = !!account;
-
-    const handleClick = () => {
-        if (isConnected) {
-            disconnectWallet();
-        } else {
-            connectWallet();
+const ConnectWallet: React.FC = () => {
+  return (
+    <ConnectButton.Custom>
+      {({
+        account,
+        chain,
+        openAccountModal,
+        openChainModal,
+        openConnectModal,
+        mounted,
+      }) => {
+        const ready = mounted;
+        if (!ready) return null;
+        
+        if (!account) {
+          return (
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={openConnectModal}
+              style={{ backgroundColor: '#3EACA3' }}
+              className="flex items-center space-x-2 text-white text-sm font-semibold 
+                         py-2 px-4 rounded-xl shadow-lg hover:shadow-xl 
+                         transition-all duration-200"
+            >
+              <BiWallet className="mr-2" />
+              Connect Wallet
+            </motion.button>
+          );
         }
-    };
 
-    return (
-        <button
-            onClick={handleClick}
-            style={{ backgroundColor: '#08B4A6' }}
-            className="flex items-center space-x-2 text-white text-sm font-semibold 
-                       py-1.5 px-4 rounded-md shadow-sm transition-all duration-200 
-                       hover:scale-105 pointer-events-auto relative z-10" // Added pointer-events-auto and z-10
-        >
-            {icon}
-            <span>{isConnected ? 'Disconnect' : 'Connect Wallet'}</span>
-        </button>
-    );
+        if (chain?.unsupported) {
+          return (
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={openChainModal}
+              className="flex items-center space-x-2 text-white text-sm font-semibold 
+                         py-2 px-4 rounded-xl shadow-lg hover:shadow-xl 
+                         transition-all duration-200 bg-red-500"
+            >
+              Wrong Network
+            </motion.button>
+          );
+        }
+
+        if (chain?.id !== mainnet.id) {
+          return (
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={openChainModal}
+              className="flex items-center space-x-2 text-white text-sm font-semibold 
+                         py-2 px-4 rounded-xl shadow-lg hover:shadow-xl 
+                         transition-all duration-200 bg-red-500"
+            >
+              Switch to Ethereum
+            </motion.button>
+          );
+        }
+
+        return (
+          <div className="flex items-center gap-2">
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={openChainModal}
+              style={{ backgroundColor: '#3EACA3' }}
+              className="flex items-center space-x-2 text-white text-sm font-semibold 
+                         py-2 px-4 rounded-xl shadow-lg hover:shadow-xl 
+                         transition-all duration-200"
+            >
+              {chain?.name ?? 'Unknown Network'}
+            </motion.button>
+
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={openAccountModal}
+              style={{ backgroundColor: '#3EACA3' }}
+              className="flex items-center space-x-2 text-white text-sm font-semibold 
+                         py-2 px-4 rounded-xl shadow-lg hover:shadow-xl 
+                         transition-all duration-200"
+            >
+              {account.displayName}
+            </motion.button>
+          </div>
+        );
+      }}
+    </ConnectButton.Custom>
+  );
 };
 
 export default ConnectWallet;

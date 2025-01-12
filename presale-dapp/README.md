@@ -2,12 +2,12 @@
 
 # GNF Token Presale Platform
 
-This project is a decentralized application (dApp) for conducting a GNF token presale. It allows users to connect their wallets, buy tokens using USDT or USDC, and track their referrals.
+This project is a decentralized application (dApp) for conducting a GNF token presale. It allows users to connect their wallets, buy tokens using USDT or BUSD, and track their referrals.
 
 ## Features
 
 - **Connect Wallet**: Users can connect their Ethereum wallet using the Rainbow package.
-- **Buy Tokens**: Users can purchase GNF tokens by entering the desired amount of USDT or USDC.
+- **Buy Tokens**: Users can purchase GNF tokens by entering the desired amount of USDT or BUSD.
 - **Referral Dashboard**: Users can view their referral URL and track referrals using MongoDB.
 - **Transaction Verification**: The application verifies transactions on the Ethereum blockchain.
 
