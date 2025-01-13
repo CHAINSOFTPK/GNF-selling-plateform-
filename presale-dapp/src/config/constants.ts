@@ -1,4 +1,4 @@
-export const API_BASE_URL = 'http://153.92.222.4:4000/api';
+export const API_BASE_URL = 'https://api.gnfstore.com/api';
 export const TOKEN_CONTRACT_ADDRESS = process.env.REACT_APP_TOKEN_CONTRACT_ADDRESS || "0xYourTokenContractAddress";
 export const USDT_CONTRACT_ADDRESS = process.env.REACT_APP_USDT_CONTRACT_ADDRESS || "0xYourUSDTContractAddress";
 export const BUSD_CONTRACT_ADDRESS = process.env.REACT_APP_BUSD_CONTRACT_ADDRESS || "0xYourBUSDContractAddress";
