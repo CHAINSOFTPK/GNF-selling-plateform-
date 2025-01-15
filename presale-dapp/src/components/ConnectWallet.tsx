@@ -24,7 +24,7 @@ const ConnectWallet: React.FC = () => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={openConnectModal}
-              style={{ backgroundColor: '#3EACA3' }}
+              style={{ backgroundColor: '#052f5c' }}
               className="flex items-center space-x-2 text-white text-sm font-semibold 
                          py-2 px-4 rounded-xl shadow-lg hover:shadow-xl 
                          transition-all duration-200"
@@ -71,7 +71,7 @@ const ConnectWallet: React.FC = () => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={openChainModal}
-              style={{ backgroundColor: '#3EACA3' }}
+              style={{ backgroundColor: '#052f5c]' }}
               className="flex items-center space-x-2 text-white text-sm font-semibold 
                          py-2 px-4 rounded-xl shadow-lg hover:shadow-xl 
                          transition-all duration-200"
@@ -83,7 +83,7 @@ const ConnectWallet: React.FC = () => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={openAccountModal}
-              style={{ backgroundColor: '#3EACA3' }}
+              style={{ backgroundColor: '#052f5c]' }}
               className="flex items-center space-x-2 text-white text-sm font-semibold 
                          py-2 px-4 rounded-xl shadow-lg hover:shadow-xl 
                          transition-all duration-200"

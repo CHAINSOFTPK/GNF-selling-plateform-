@@ -174,7 +174,7 @@ const AdminPage: React.FC = () => {
                         <div className="text-center mb-8">
                             <div className="flex justify-center mb-4">
                                 <img 
-                                    src="https://i.ibb.co/F4n00MP/bfecf737-844d-4a6c-ba16-9052fad6c92a.png" 
+                                    src="/logo.png" 
                                     alt="GNF Logo" 
                                     className="h-16 w-auto" 
                                 />
@@ -227,7 +227,7 @@ const AdminPage: React.FC = () => {
 
                             <button
                                 type="submit"
-                                style={{ backgroundColor: '#08B4A6' }}  // Add this line
+                                style={{ backgroundColor: '#052f5c' }}  // Add this line
                                 className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg
                                          text-sm font-semibold text-white hover:bg-[#079e92]
                                          focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#08B4A6]
@@ -245,7 +245,7 @@ const AdminPage: React.FC = () => {
     if (loading) {
         return (
             <div className="min-h-screen flex items-center justify-center">
-                <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-[#08B4A6]"></div>
+                <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-[#052f5c]"></div>
             </div>
         );
     }

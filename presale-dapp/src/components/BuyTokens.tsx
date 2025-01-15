@@ -608,15 +608,16 @@ const BuyTokens: React.FC = () => {
                 <div 
                     className="absolute inset-0 opacity-[0.015]"
                     style={{
-                        backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise' x='0' y='0'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E")`,
+                        backgroundColor: `#060330`,
+                
                         backgroundRepeat: 'repeat',
                         backgroundSize: '128px 128px'
                     }}
                 />
             </div>
 
-            {/* Updated Quote Header with improved typography */}
             <div className="relative z-10 w-full bg-gradient-to-r from-black/50 via-transparent to-black/50 backdrop-blur-sm py-12 mb-8">
+            <header className="relative z-10 w-full bg-cover bg-center bg-no-repeat py-12 mb-8" style={{ backgroundImage: 'url(/top.jpg)', backgroundPosition: 'top center', backgroundRepeat: 'no-repeat', backgroundSize: 'cover', backdropFilter: 'blur(5px)', display: 'flex', flexDirection: 'row', justifyContent: 'center', paddingTop: '140px', paddingBottom: '120px', borderRadius: '20px' }}>
                 <motion.div
                     key={currentQuote}
                     initial={{ opacity: 0, y: 20 }}
@@ -635,115 +636,130 @@ const BuyTokens: React.FC = () => {
                     </h2>
                     {quotes[currentQuote].author && (
                         <p 
-                            className="text-sm md:text-base text-white/80 font-medium tracking-wide"
+                            className="text-sm md:text-base text-white font-medium tracking-wide" // Changed text color to white
                             style={{ 
                                 fontFamily: "'Inter', sans-serif",
                             }}
                         >
                             {quotes[currentQuote].author}
                         </p>
+                
                     )}
                 </motion.div>
-            </div>
+            </header>
 
-            {/* Main Content - Further reduced width and adjusted padding */}
-            <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 py-12">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    {tokenEntries.map((token, index) => (
-                        <motion.div
-                            key={token.key}
-                            initial={{ opacity: 0, y: 50 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ 
-                                duration: 0.5, 
-                                delay: index * 0.2,
-                                type: "spring",
-                                stiffness: 100 
-                            }}
-                            whileHover={{ 
-                                scale: 1.03,
-                                boxShadow: '0 0 30px rgba(54, 212, 199, 0.3)',
-                                transition: { duration: 0.2 } 
-                            }}
-                            className="relative group rounded-2xl overflow-hidden"
+            {/* Main Content Container */}
+            <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 py-12">
+                {/* White outline container with background GIF */}
+                <div className="relative border-2 border-white/30 rounded-3xl p-8 backdrop-blur-sm bg-white/5 overflow-hidden">
+                    {/* Background GIF */}
+                    <div className="absolute inset-0 z-0 opacity-20">
+                        <img 
+                            src="/Mr3W.gif" 
+                            alt="Background Animation" 
+                            className="w-full h-full object-cover"
                             style={{
-                                backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                                backdropFilter: 'blur(10px)',
-                                WebkitBackdropFilter: 'blur(10px)',
-                                border: '1px solid rgba(255, 255, 255, 0.18)',
-                                boxShadow: '0 8px 32px 0 rgba(54, 212, 199, 0.15)',
-                                transition: 'all 0.3s ease-in-out',
-                                transform: 'scale(0.85)' // Made cards even smaller
+                                filter: 'brightness(0.) contrast(1.2)',
+                                mixBlendMode: 'lighten'
                             }}
-                        >
-                            {/* Enhanced Card Header */}
-                            <div className="p-6" style={{ background: 'linear-gradient(to right, #3EACA3, #2C8F88)' }}> {/* Fixed background color */}
-                                <div className="flex items-center justify-between mb-4"> {/* Reduced margin */}
-                                    <h3 className="text-2xl font-bold text-white">{token.symbol}</h3> {/* Smaller text */}
-                                    <div className="bg-white/30 p-3 rounded-lg text-white"> {/* Added text-white */}
-                                        {React.isValidElement(TOKEN_CONFIGS[token.key].icon) && 
-                                            React.cloneElement(TOKEN_CONFIGS[token.key].icon as React.ReactElement<any>, { 
-                                                className: 'text-white text-3xl' 
-                                            })
-                                        }
+                        />
+                        {/* Dark overlay to improve content visibility */}
+                        <div className="absolute inset-0 bg-gradient-to-br from-black/40 to-black/60" />
+                    </div>
+
+                    {/* Main content grid - with higher z-index to appear above the GIF */}
+                    <div className="relative z-10 grid grid-cols-1 md:grid-cols-3 gap-6">
+                        {tokenEntries.map((token, index) => (
+                            <motion.div
+                                key={token.key}
+                                initial={{ opacity: 0, y: 50 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ 
+                                    duration: 0.5, 
+                                    delay: index * 0.2,
+                                    type: "spring",
+                                    stiffness: 100 
+                                }}
+                                whileHover={{ 
+                                    scale: 1.05,
+                                    boxShadow: '0 0 30px rgba(59, 130, 246, 0.5)',
+                                }}
+                                className="relative group rounded-2xl overflow-hidden"
+                                style={{
+                                    background: 'linear-gradient(135deg, #052f5c, #3175bc)', // Updated gradient colors
+                                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                                    transition: 'all 0.3s ease-in-out',
+                                }}
+                            >
+                                {/* Card content remains the same */}
+                                <div className="p-6" style={{ background: 'linear-gradient(to right,rgb(17, 24, 65),rgb(70, 166, 207),rgb(78, 125, 132))' }}> {/* Fixed background color */}
+                                    <div className="flex items-center justify-between mb-4"> {/* Reduced margin */}
+                                        <h3 className="text-2xl font-bold text-white">{token.symbol}</h3> {/* Smaller text */}
+                                        <div className="bg-white/30 p-3 rounded-lg text-white"> {/* Added text-white */}
+                                            {React.isValidElement(TOKEN_CONFIGS[token.key].icon) && 
+                                                React.cloneElement(TOKEN_CONFIGS[token.key].icon as React.ReactElement<any>, { 
+                                                    className: 'text-white text-3xl' 
+                                                })
+                                            }
+                                        </div>
+                                    </div>
+                                    <div className="flex items-baseline mb-4"> {/* Reduced margin */}
+                                        <span className="text-4xl font-extrabold text-white">${token.price}</span> {/* Smaller text */}
+                                        <span className="ml-2 text-white text-sm">{/* Changed text-white/80 to text-white */}per token</span> {/* Smaller text */}
                                     </div>
                                 </div>
-                                <div className="flex items-baseline mb-4"> {/* Reduced margin */}
-                                    <span className="text-4xl font-extrabold text-white">${token.price}</span> {/* Smaller text */}
-                                    <span className="ml-2 text-white text-sm">{/* Changed text-white/80 to text-white */}per token</span> {/* Smaller text */}
-                                </div>
-                            </div>
 
-                            {/* Enhanced Card Body */}
-                            <div className="bg-white/95 p-6 space-y-4"> {/* Reduced padding and spacing */}
-                                <div className="space-y-3"> {/* Reduced spacing */}
-                                    {/* Supply Info */}
-                                    <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg border border-gray-100"> {/* Adjusted styling */}
-                                        <span className="text-gray-600 text-sm font-medium">Supply</span>
-                                        <span className="text-teal-600 font-bold text-sm">{formatNumber(token.totalSupply)}</span>
+                                {/* Enhanced Card Body */}
+                                <div className="bg-white/95 p-6 space-y-4"> {/* Reduced padding and spacing */}
+                                    <div className="space-y-3"> {/* Reduced spacing */}
+                                        {/* Supply Info */}
+                                        <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg border border-gray-100"> {/* Adjusted styling */}
+                                            <span className="text-gray-600 text-sm font-medium">Supply</span>
+                                            <span className="text-teal-600 font-bold text-sm">{formatNumber(token.totalSupply)}</span>
+                                        </div>
+                                        
+                                        {/* Max per Wallet Info */}
+                                        {token.maxPerWallet && (
+                                            <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg border border-gray-100">
+                                                <span className="text-gray-600 text-sm font-medium">Max per wallet</span>
+                                                <span className="text-teal-600 font-bold text-sm">{token.maxPerWallet}</span>
+                                            </div>
+                                        )}
+                                        
+                                        {/* Vesting Period Info */}
+                                        {token.vestingPeriod && (
+                                            <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg border border-gray-100">
+                                                <span className="text-gray-600 text-sm font-medium">Vesting</span>
+                                                <span className="text-teal-600 font-bold text-sm">
+                                                    {token.vestingPeriod === 365 ? '1 Year' : '3 Years'}
+                                                </span>
+                                            </div>
+                                        )}
                                     </div>
-                                    
-                                    {/* Max per Wallet Info */}
-                                    {token.maxPerWallet && (
-                                        <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg border border-gray-100">
-                                            <span className="text-gray-600 text-sm font-medium">Max per wallet</span>
-                                            <span className="text-teal-600 font-bold text-sm">{token.maxPerWallet}</span>
-                                        </div>
-                                    )}
-                                    
-                                    {/* Vesting Period Info */}
-                                    {token.vestingPeriod && (
-                                        <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg border border-gray-100">
-                                            <span className="text-gray-600 text-sm font-medium">Vesting</span>
-                                            <span className="text-teal-600 font-bold text-sm">
-                                                {token.vestingPeriod === 365 ? '1 Year' : '3 Years'}
-                                            </span>
-                                        </div>
-                                    )}
-                                </div>
 
-                                {/* Enhanced Action Button */}
-                                <button
-                                    onClick={() => handleTokenButtonClick(token)}
-                                    disabled={isButtonDisabled(token)}
-                                    className={`
-                                        w-full py-3 px-4 rounded-lg font-bold text-sm
-                                        transition-all duration-300 ease-in-out transform
-                                        ${isButtonDisabled(token)
-                                            ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                                            : 'hover:bg-[#358F88] active:scale-95 shadow-lg hover:shadow-xl'
-                                        }
-                                    `}
-                                    style={{ 
-                                        backgroundColor: isButtonDisabled(token) ? '#D1D5DB' : '#3EACA3',
-                                        color: isButtonDisabled(token) ? '#6B7280' : 'white'
-                                    }}
-                                >
-                                    {getButtonText(token)}
-                                </button>
-                            </div>
-                        </motion.div>
-                    ))}
+                                    {/* Enhanced Action Button */}
+                                    <button
+                                        onClick={() => handleTokenButtonClick(token)}
+                                        disabled={isButtonDisabled(token)}
+                                        className={`
+                                            w-full py-3 px-4 rounded-lg font-bold text-sm
+                                            transition-all duration-300 ease-in-out transform
+                                            ${isButtonDisabled(token)
+                                                ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                                                : 'hover:bg-[#358F88] active:scale-95 shadow-lg hover:shadow-xl'
+                                            }
+                                        `}
+                                        style={{ 
+                                            backgroundColor: isButtonDisabled(token) ? '#D1D5DB' : '#3EACA3',
+                                            color: isButtonDisabled(token) ? '#6B7280' : 'white'
+                                        }}
+                                    >
+                                        {getButtonText(token)}
+                                    </button>
+                                </div>
+                            </motion.div>
+                        ))}
+                    </div>
                 </div>
             </div>
 
