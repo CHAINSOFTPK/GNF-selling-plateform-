@@ -616,7 +616,7 @@ const BuyTokens: React.FC = () => {
                 />
             </div>
 
-            <div className="relative z-10 w-full bg-gradient-to-r from-black/50 via-transparent to-black/50 backdrop-blur-sm py-12 mb-8">
+            {/* Header Section */}
             <header className="relative z-10 w-full bg-cover bg-center bg-no-repeat py-12 mb-8" style={{ backgroundImage: 'url(/top.jpg)', backgroundPosition: 'top center', backgroundRepeat: 'no-repeat', backgroundSize: 'cover', backdropFilter: 'blur(5px)', display: 'flex', flexDirection: 'row', justifyContent: 'center', paddingTop: '140px', paddingBottom: '120px', borderRadius: '20px' }}>
                 <motion.div
                     key={currentQuote}
