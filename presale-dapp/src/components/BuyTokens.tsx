@@ -777,7 +777,7 @@ const BuyTokens: React.FC = () => {
                             boxShadow: '0 0 25px rgba(54, 212, 199, 0.5)'
                         }}
                         whileTap={{ scale: 0.95 }}
-                        style={{ backgroundColor: '#3EACA3' }}
+                        style={{ backgroundColor: ' #60a5fa' }}
                         className="group relative inline-flex items-center justify-center px-8 py-4 overflow-hidden font-bold rounded-xl text-white shadow-2xl transition-all duration-300"
                     >
                         <span className="absolute right-0 w-8 h-32 -mt-12 transition-all duration-1000 transform translate-x-12 bg-white opacity-10 rotate-12 group-hover:-translate-x-40 ease"></span>
