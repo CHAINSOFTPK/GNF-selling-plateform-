@@ -28,13 +28,14 @@ const Header: React.FC = () => {
     };
 
     return (
-        <header className="bg-white shadow-md border-b border-gray-100 relative z-50"> {/* Added z-50 */}
+        <header className="bg-white shadow-md border-b border-gray-100 relative z-50"> {/* Changed bg color */}
             {/* Desktop Header */}
             <div className="hidden md:flex justify-between items-center px-6 py-3 relative"> {/* Added relative */}
-                <div className="absolute -top-8 -left-8 w-32 h-32 bg-[#08B4A6]/10 rounded-full blur-2xl pointer-events-none" />
+                <div className="absolute -top-8 -left-8 w-32 h-32 bg-[#052f5c]/10 rounded-full blur-2xl pointer-events-none" />
                 <div className="flex items-center cursor-pointer hover:opacity-80 transition-opacity relative pointer-events-auto" onClick={() => navigate('/')}>
+
                     <img 
-                        src="https://i.ibb.co/F4n00MP/bfecf737-844d-4a6c-ba16-9052fad6c92a.png" 
+                        src="/logo.png" 
                         alt="GNF Logo" 
                         className="h-12" 
                     />
@@ -47,33 +48,33 @@ const Header: React.FC = () => {
                             href="https://t.me/megapayer" 
                             target="_blank" 
                             rel="noopener noreferrer"
-                            className="text-[#08B4A6] hover:text-[#079e92] transition-colors duration-300 hover:scale-110 transform pointer-events-auto"
+                            className="text-[#052f5c] hover:text-[#079e92] transition-colors duration-300 hover:scale-110 transform pointer-events-auto"
                         >
-                            <FaTelegram size={24} style={{ color: '#08B4A6' }} />
+                            <FaTelegram size={24} style={{ color: '#052f5c' }} />
                         </a>
                         <a 
                             href="https://twitter.com/megapayer" 
                             target="_blank" 
                             rel="noopener noreferrer"
-                            className="text-[#08B4A6] hover:text-[#079e92] transition-colors duration-300 hover:scale-110 transform pointer-events-auto"
+                            className="text-[#052f5c] hover:text-[#079e92] transition-colors duration-300 hover:scale-110 transform pointer-events-auto"
                         >
-                            <FaTwitter size={24} style={{ color: '#08B4A6' }} />
+                            <FaTwitter size={24} style={{ color: '#052f5c' }} />
                         </a>
                         <a 
                             href="https://discord.gg/NVqRsTnQ" 
                             target="_blank" 
                             rel="noopener noreferrer"
-                            className="text-[#08B4A6] hover:text-[#079e92] transition-colors duration-300 hover:scale-110 transform pointer-events-auto"
+                            className="text-[#052f5c] hover:text-[#079e92] transition-colors duration-300 hover:scale-110 transform pointer-events-auto"
                         >
-                            <FaDiscord size={24} style={{ color: '#08B4A6' }} />
+                            <FaDiscord size={24} style={{ color: '#052f5c' }} />
                         </a>
                         <a 
                             href="https://www.youtube.com/@Megapayer_io" 
                             target="_blank" 
                             rel="noopener noreferrer"
-                            className="text-[#08B4A6] hover:text-[#079e92] transition-colors duration-300 hover:scale-110 transform pointer-events-auto"
+                            className="text-[#052f5c] hover:text-[#079e92] transition-colors duration-300 hover:scale-110 transform pointer-events-auto"
                         >
-                            <FaYoutube size={24} style={{ color: '#08B4A6' }} />
+                            <FaYoutube size={24} style={{ color: '#052f5c' }} />
                         </a>
                        
                     </div>
@@ -85,8 +86,8 @@ const Header: React.FC = () => {
                         <>
                             <button
                                 onClick={handleDashboardClick}
-                                className="flex items-center space-x-2 bg-[#08B4A6] hover:bg-[#079e92] text-white text-sm font-semibold py-1.5 px-4 rounded-md shadow-sm transition-all duration-200 hover:scale-105 w-32 pointer-events-auto"
-                                style={{ backgroundColor: '#08B4A6' }}
+                                className="flex items-center space-x-2 bg-[#052f5c] hover:bg-[#079e92] text-white text-sm font-semibold py-1.5 px-4 rounded-md shadow-sm transition-all duration-200 hover:scale-105 w-32 pointer-events-auto"
+                                style={{ backgroundColor: '#052f5c' }}
                             >
                                 <FaChartLine className="text-white" />
                                 <span>Dashboard</span>
@@ -105,7 +106,8 @@ const Header: React.FC = () => {
                 <div className="flex justify-between items-center px-4 py-3">
                     {/* Logo */}
                     <div className="flex items-center" onClick={() => navigate('/')}>
-                        <img src="https://i.ibb.co/F4n00MP/bfecf737-844d-4a6c-ba16-9052fad6c92a.png" 
+
+                        <img src="/logo.png" 
                              alt="GNF Logo" 
                              className="h-8" 
                         />
@@ -114,7 +116,7 @@ const Header: React.FC = () => {
                     {/* Mobile Menu Button */}
                     <button 
                         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                        className="text-[#08B4A6] p-2"
+                        className="text-[#052f5c] p-2"
                     >
                         {isMobileMenuOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
                     </button>
@@ -130,33 +132,33 @@ const Header: React.FC = () => {
                                     href="https://t.me/yourgroup" 
                                     target="_blank" 
                                     rel="noopener noreferrer"
-                                    className="text-[#08B4A6] hover:text-[#079e92] transition-colors duration-300 hover:scale-110 transform"
+                                    className="text-[#052f5c] hover:text-[#079e92] transition-colors duration-300 hover:scale-110 transform"
                                 >
-                                    <FaTelegram size={24} style={{ color: '#08B4A6' }} />
+                                    <FaTelegram size={24} style={{ color: '#052f5c' }} />
                                 </a>
                                 <a 
                                     href="https://twitter.com/yourprofile" 
                                     target="_blank" 
                                     rel="noopener noreferrer"
-                                    className="text-[#08B4A6] hover:text-[#079e92] transition-colors duration-300 hover:scale-110 transform"
+                                    className="text-[#052f5c] hover:text-[#079e92] transition-colors duration-300 hover:scale-110 transform"
                                 >
-                                    <FaTwitter size={24} style={{ color: '#08B4A6' }} />
+                                    <FaTwitter size={24} style={{ color: '#052f5c' }} />
                                 </a>
                                 <a 
                                     href="https://discord.gg/yourinvite" 
                                     target="_blank" 
                                     rel="noopener noreferrer"
-                                    className="text-[#08B4A6] hover:text-[#079e92] transition-colors duration-300 hover:scale-110 transform"
+                                    className="text-[#052f5c] hover:text-[#079e92] transition-colors duration-300 hover:scale-110 transform"
                                 >
-                                    <FaDiscord size={24} style={{ color: '#08B4A6' }} />
+                                    <FaDiscord size={24} style={{ color: '#052f5c' }} />
                                 </a>
                                 <a 
                                     href="https://youtube.com/@yourchannel" 
                                     target="_blank" 
                                     rel="noopener noreferrer"
-                                    className="text-[#08B4A6] hover:text-[#079e92] transition-colors duration-300 hover:scale-110 transform"
+                                    className="text-[#052f5c] hover:text-[#079e92] transition-colors duration-300 hover:scale-110 transform"
                                 >
-                                    <FaYoutube size={24} style={{ color: '#08B4A6' }} />
+                                    <FaYoutube size={24} style={{ color: '#052f5c' }} />
                                 </a>
                                 
                             </div>
@@ -166,7 +168,7 @@ const Header: React.FC = () => {
                                 {isConnected && (
                                     <button
                                         onClick={handleDashboardClick}
-                                        className="w-full flex items-center justify-center space-x-2 bg-[#08B4A6] text-white py-2 px-4 rounded-md"
+                                        className="w-full flex items-center justify-center space-x-2 bg-[#052f5c] text-white py-2 px-4 rounded-md"
                                     >
                                         <FaChartLine className="text-white" />
                                         <span>Dashboard</span>

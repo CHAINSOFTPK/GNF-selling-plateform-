@@ -15,6 +15,7 @@
     "@tanstack/react-query": "^5.64.0",
     "@types/react-router-dom": "^5.3.3",
     "@wagmi/core": "^2.16.3",
+    "axios": "^1.7.9",
     "chart.js": "^4.0.0",
     "ethers": "^5.7.2",
     "framer-motion": "^11.17.0",
