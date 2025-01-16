@@ -46,7 +46,7 @@ const AddNetwork: React.FC<AddNetworkProps> = ({ buttonText }) => {
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
       onClick={handleAddNetwork}
-      style={{ backgroundColor: '#329991' }}
+      style={{ backgroundColor: ' #052f5c' }}
       className="flex items-center space-x-2 text-white px-4 py-2 rounded-lg 
                  transition-all duration-200 hover:brightness-110"
     >

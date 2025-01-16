@@ -54,8 +54,16 @@ const FAQ: React.FC = () => {
     const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
     return (
-        <div className="w-full max-w-4xl mx-auto px-4 py-8">
-            <h2 className="text-3xl font-bold text-black text-center mb-8">
+        <div className="w-full max-w-5xl mx-auto px-4 py-12">
+            <h2 
+                className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-center mb-12 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-blue-600 to-blue-800 animate-gradient-x tracking-tight"
+                style={{
+                    backgroundSize: '200% auto',
+                    animation: 'gradient 3s linear infinite',
+                    fontFamily: "'Space Grotesk', sans-serif",
+                    textShadow: '0 2px 10px rgba(59, 130, 246, 0.2)'
+                }}
+            >
                 Frequently Asked Questions
             </h2>
             <div className="space-y-4">
@@ -63,19 +71,19 @@ const FAQ: React.FC = () => {
                     <motion.div
                         key={index}
                         initial={false}
-                        className="rounded-xl overflow-hidden bg-white/10 backdrop-blur-lg border border-white/10"
+                        className="rounded-xl overflow-hidden bg-gray-800/90 backdrop-blur-lg border border-gray-700"
                     >
                         <motion.button
                             onClick={() => setActiveIndex(activeIndex === index ? null : index)}
                             className="w-full px-6 py-5 flex items-center justify-between text-left"
-                            whileHover={{ backgroundColor: 'rgba(255, 255, 255, 0.05)' }}
+                            whileHover={{ backgroundColor: 'rgba(75, 85, 99, 0.3)' }}
                         >
-                            <span className="text-black font-semibold text-lg">{faq.question}</span>
+                            <span className="text-white font-semibold text-lg">{faq.question}</span>
                             <motion.div
                                 animate={{ rotate: activeIndex === index ? 180 : 0 }}
                                 transition={{ duration: 0.3 }}
                             >
-                                <FaChevronDown className="text-black/70" />
+                                <FaChevronDown className="text-white/70" />
                             </motion.div>
                         </motion.button>
                         <AnimatePresence>
@@ -87,8 +95,8 @@ const FAQ: React.FC = () => {
                                     transition={{ duration: 0.3 }}
                                     className="overflow-hidden"
                                 >
-                                    <div className="px-6 py-5 border-t border-white/10">
-                                        <p className="text-white/80 leading-relaxed">
+                                    <div className="px-6 py-5 border-t border-gray-700">
+                                        <p className="text-gray-300 leading-relaxed">
                                             {faq.answer}
                                         </p>
                                     </div>
@@ -101,6 +109,15 @@ const FAQ: React.FC = () => {
         </div>
     );
 };
+
+// Add this to your global CSS or add it inline using a style tag
+const gradientAnimation = `
+    @keyframes gradient {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+`;
 
 export default FAQ;
 export type { FAQItem };
