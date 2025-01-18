@@ -3,6 +3,13 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Add these rules at the top level for proper iframe integration */
+html, body {
+  height: auto !important;
+  overflow: visible !important; /* ensure React content can grow without forcing scroll */
+  min-height: 100%;
+}
+
 @keyframes gradient-shift {
     0% { background-position: 0% 50%; }
     50% { background-position: 100% 50%; }

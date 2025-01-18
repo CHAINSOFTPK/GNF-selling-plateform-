@@ -75,7 +75,7 @@ const App: React.FC = () => {
             <WagmiConfig config={config}>
                 <RainbowKitProvider
                     theme={darkTheme({
-                        accentColor: '#3EACA3',
+                        accentColor: '#0194FC',
                         borderRadius: 'medium'
                     })}
                     showRecentTransactions={true}

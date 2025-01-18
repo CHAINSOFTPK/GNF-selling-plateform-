@@ -20,7 +20,7 @@ ChartJS.register(
 
 // Theme colors
 const colors = {
-    primary: '#08B4A6',
+    primary: '#0194FC',
     primaryLight: '#079e92',
     primaryDark: '#068c82',
     gridColor: 'rgba(0, 0, 0, 0.1)',

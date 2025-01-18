@@ -24,7 +24,7 @@ import { usePublicClient, useWalletClient } from 'wagmi';
 import { validateAmount, safeParseFloat } from '../utils/validation';
 import FAQ from './FAQ';
 
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://153.92.222.4:4000/api';
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'https://api.gnfstore.com/api';
 const TOKEN_CONFIGS: Record<string, TokenConfig> = {
     GNF10: {
         symbol: 'GNF10',
@@ -33,7 +33,7 @@ const TOKEN_CONFIGS: Record<string, TokenConfig> = {
         totalSupply: 500000,
         requiresSocialVerification: true,
         description: 'For verified social media followers',
-        bgColor: 'bg-[#08B4A6]', // Simplified color
+        bgColor: 'bg-[#0194FC]', // Simplified color
         icon: <RiUserFollowLine className="text-3xl" />,
         benefits: [
             'Early Access to Platform',
@@ -568,86 +568,13 @@ const BuyTokens: React.FC = () => {
 
     return (
         <div className="min-h-screen relative overflow-hidden">
-            {/* Updated Background with more sophisticated design */}
-            <div className="fixed inset-0 z-0">
-                {/* Main gradient background */}
-                <div className="absolute inset-0 bg-gradient-to-br from-[#1a1a1a] via-[#2d2d2d] to-[#1a1a1a]" />
-                
-                {/* Animated gradient overlay */}
-                <div className="absolute inset-0 opacity-30">
-                    <div className="absolute inset-0 bg-gradient-to-r from-teal-500/20 via-cyan-500/20 to-blue-500/20 animate-gradient-x" />
-                    <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/30 to-black/50" />
-                </div>
+                        <div 
+                            className="fixed inset-0 z-0 bg-cover bg-center bg-no-repeat"
+                            style={{ backgroundImage: 'url("https://i.postimg.cc/90SQQwCX/bg.png")' }}
+                        />
 
-                {/* Geometric patterns */}
-                <div className="absolute inset-0">
-                    <div className="absolute w-full h-full">
-                        {Array.from({ length: 5 }).map((_, i) => (
-                            <div
-                                key={i}
-                                className="absolute rounded-full mix-blend-overlay"
-                                style={{
-                                    left: `${Math.random() * 100}%`,
-                                    top: `${Math.random() * 100}%`,
-                                    width: `${Math.random() * 400 + 100}px`,
-                                    height: `${Math.random() * 400 + 100}px`,
-                                    background: `radial-gradient(circle, ${
-                                        ['rgba(45,212,191,0.1)', 'rgba(56,189,248,0.1)', 'rgba(59,130,246,0.1)'][
-                                            Math.floor(Math.random() * 3)
-                                        ]
-                                    } 0%, transparent 70%)`,
-                                    transform: 'translate(-50%, -50%)',
-                                    animation: `float ${Math.random() * 10 + 15}s infinite`
-                                }}
-                            />
-                        ))}
-                    </div>
-                </div>
-
-                {/* Light noise texture */}
-                <div 
-                    className="absolute inset-0 opacity-[0.015]"
-                    style={{
-                        backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise' x='0' y='0'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E")`,
-                        backgroundRepeat: 'repeat',
-                        backgroundSize: '128px 128px'
-                    }}
-                />
-            </div>
-
-            {/* Updated Quote Header with improved typography */}
-            <div className="relative z-10 w-full bg-gradient-to-r from-black/50 via-transparent to-black/50 backdrop-blur-sm py-12 mb-8">
-                <motion.div
-                    key={currentQuote}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -20 }}
-                    transition={{ duration: 0.5 }}
-                    className="text-center max-w-4xl mx-auto px-4"
-                >
-                    <h2 
-                        className={`text-2xl md:text-3xl lg:text-4xl mb-3 text-white ${quotes[currentQuote].className}`}
-                        style={{ 
-                            textShadow: '0 2px 4px rgba(0,0,0,0.3)'
-                        }}
-                    >
-                        {quotes[currentQuote].text}
-                    </h2>
-                    {quotes[currentQuote].author && (
-                        <p 
-                            className="text-sm md:text-base text-white/80 font-medium tracking-wide"
-                            style={{ 
-                                fontFamily: "'Inter', sans-serif",
-                            }}
-                        >
-                            {quotes[currentQuote].author}
-                        </p>
-                    )}
-                </motion.div>
-            </div>
-
-            {/* Main Content - Further reduced width and adjusted padding */}
-            <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 py-12">
+                        {/* Main Content */}
+            <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 py-12 mt-24">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     {tokenEntries.map((token, index) => (
                         <motion.div
@@ -677,7 +604,7 @@ const BuyTokens: React.FC = () => {
                             }}
                         >
                             {/* Enhanced Card Header */}
-                            <div className="p-6" style={{ background: 'linear-gradient(to right, #3EACA3, #2C8F88)' }}> {/* Fixed background color */}
+                            <div className="p-6" style={{ background: 'linear-gradient(to right, #0194FC, #300855)' }}> {/* Fixed background color */}
                                 <div className="flex items-center justify-between mb-4"> {/* Reduced margin */}
                                     <h3 className="text-2xl font-bold text-white">{token.symbol}</h3> {/* Smaller text */}
                                     <div className="bg-white/30 p-3 rounded-lg text-white"> {/* Added text-white */}
@@ -735,7 +662,7 @@ const BuyTokens: React.FC = () => {
                                         }
                                     `}
                                     style={{ 
-                                        backgroundColor: isButtonDisabled(token) ? '#D1D5DB' : '#3EACA3',
+                                        backgroundColor: isButtonDisabled(token) ? '#D1D5DB' : '#0194FC',
                                         color: isButtonDisabled(token) ? '#6B7280' : 'white'
                                     }}
                                 >
@@ -747,41 +674,8 @@ const BuyTokens: React.FC = () => {
                 </div>
             </div>
 
-            {/* Add new buttons container after the token cards */}
-            <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 py-12">
-                <div className="flex flex-col md:flex-row justify-center items-center gap-6">
-                   
+          
 
-                    <motion.a
-                        href="/whitepaper.pdf"  // PDF should be in public folder
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        whileHover={{ 
-                            scale: 1.05,
-                            boxShadow: '0 0 25px rgba(54, 212, 199, 0.5)'
-                        }}
-                        whileTap={{ scale: 0.95 }}
-                        style={{ backgroundColor: '#3EACA3' }}
-                        className="group relative inline-flex items-center justify-center px-8 py-4 overflow-hidden font-bold rounded-xl text-white shadow-2xl transition-all duration-300"
-                    >
-                        <span className="absolute right-0 w-8 h-32 -mt-12 transition-all duration-1000 transform translate-x-12 bg-white opacity-10 rotate-12 group-hover:-translate-x-40 ease"></span>
-                        <span className="relative flex items-center gap-2">
-                            <HiSparkles className="text-xl" />
-                            Whitepaper
-                        </span>
-                    </motion.a>
-                </div>
-            </div>
-
-            {/* Add FAQ section here */}
-            <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5 }}
-                className="relative z-10"
-            >
-                <FAQ />
-            </motion.div>
 
             {/* Enhanced Purchase Modal */}
             <AnimatePresence>
@@ -799,7 +693,7 @@ const BuyTokens: React.FC = () => {
                             className="bg-white rounded-3xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.3)] max-w-md w-full overflow-hidden"
                         >
                             {/* Modal Header */}
-                            <div className="px-8 py-8" style={{ backgroundColor: '#3EACA3' }}>
+                            <div className="px-8 py-8" style={{ backgroundColor: '#0194FC' }}>
                                 <div className="flex justify-between items-center">
                                     <div>
                                         <h3 className="text-4xl font-bold text-white mb-2">
@@ -868,7 +762,7 @@ const BuyTokens: React.FC = () => {
                                 </div>
 
                                 {/* Token Receipt Preview */}
-                                <div className="p-6 rounded-2xl shadow-lg" style={{ backgroundColor: '#3EACA3' }}>
+                                <div className="p-6 rounded-2xl shadow-lg" style={{ backgroundColor: '#0194FC' }}>
                                     <p className="text-white text-sm font-medium mb-2">You will receive:</p>
                                     <div className="flex items-baseline space-x-2">
                                         <p className="text-4xl font-bold text-white">
@@ -897,7 +791,7 @@ const BuyTokens: React.FC = () => {
                                             whileTap={{ scale: 0.98 }}
                                             onClick={handleApprove}
                                             disabled={isApproving || !amount}
-                                            style={{ backgroundColor: '#3EACA3' }}
+                                            style={{ backgroundColor: '#0194FC' }}
                                             className="flex-1 py-4 px-6 rounded-xl text-white font-semibold shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
                                         >
                                             {isApproving ? (
@@ -918,7 +812,7 @@ const BuyTokens: React.FC = () => {
                                             whileTap={{ scale: 0.98 }}
                                             onClick={handlePurchaseConfirm}
                                             disabled={loading || !amount}
-                                            style={{ backgroundColor: '#3EACA3' }}
+                                            style={{ backgroundColor: '#0194FC' }}
                                             className="flex-1 py-4 px-6 rounded-xl text-white font-semibold shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
                                         >
                                             {loading ? (
@@ -957,15 +851,13 @@ const BuyTokens: React.FC = () => {
                             className="bg-white rounded-3xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.3)] max-w-md w-full overflow-hidden transform scale-90" // Added scale-90
                         >
                             {/* Modal Header */}
-                            <div className="px-8 py-8" style={{ backgroundColor: '#3EACA3' }}>
+                            <div className="px-8 py-8" style={{ backgroundColor: '#300855' }}>
                                 <div className="flex justify-between items-center">
                                     <div>
                                         <h3 className="text-4xl font-bold text-white mb-2">
                                             Social Verification
                                         </h3>
-                                        <p className="text-white/80 text-lg">
-                                            Connect your social accounts
-                                        </p>
+                                       
                                     </div>
                                     <motion.button
                                         whileHover={{ rotate: 90 }}
@@ -988,7 +880,7 @@ const BuyTokens: React.FC = () => {
                                         href="https://twitter.com/megapayer"
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        style={{ backgroundColor: '#349B93' }}
+                                        style={{ backgroundColor: '#300855' }}
                                         className="py-4 px-6 text-white rounded-xl flex items-center justify-center gap-3 shadow-lg hover:shadow-xl transition-all duration-200"
                                     >
                                         <FaTwitter size={20} />
@@ -1000,7 +892,7 @@ const BuyTokens: React.FC = () => {
                                         href="https://discord.gg/NVqRsTnQ"
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        style={{ backgroundColor: '#349B93' }}
+                                        style={{ backgroundColor: '#300855' }}
                                         className="py-4 px-6 text-white rounded-xl flex items-center justify-center gap-3 shadow-lg hover:shadow-xl transition-all duration-200"
                                     >
                                         <FaDiscord size={20} />
@@ -1067,7 +959,7 @@ const BuyTokens: React.FC = () => {
                                         whileTap={{ scale: 0.98 }}
                                         onClick={handleSocialVerification}
                                         disabled={isSubmitting || !twitterHandle || !discordHandle}
-                                        style={{ backgroundColor: '#349B93' }}
+                                        style={{ backgroundColor: '#300855' }}
                                         className="w-full py-4 px-6 text-white rounded-xl font-semibold shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
                                     >
                                         {isSubmitting ? (

@@ -10,7 +10,7 @@ interface TokenPurchaseCardProps {
 
 const TokenPurchaseCard: React.FC<TokenPurchaseCardProps> = ({ token, onPurchase, disabled }) => {
     return (
-        <div className="bg-white rounded-xl p-6 shadow-lg border-2 border-[#08B4A6]/20">
+        <div className="bg-white rounded-xl p-6 shadow-lg border-2 border-[#0194FC]/20">
             <h3 className="text-2xl font-bold mb-4">{token.symbol}</h3>
             <div className="space-y-2">
                 <p>Price: ${token.price}</p>
@@ -24,7 +24,7 @@ const TokenPurchaseCard: React.FC<TokenPurchaseCardProps> = ({ token, onPurchase
                 <button
                     onClick={() => onPurchase(token.symbol, 0)}
                     disabled={disabled}
-                    style={{ backgroundColor: '#08B4A6' }}
+                    style={{ backgroundColor: '#0194FC' }}
                     className="w-full mt-4 text-white py-2 rounded-lg disabled:opacity-50"
                 >
                     Purchase

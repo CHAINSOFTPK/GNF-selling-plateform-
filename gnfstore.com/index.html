@@ -1,0 +1,1139 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Global Network</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="56x56" href="assets/images/fav-icon/icon.png">
+    <!-- bootstrap CSS -->
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css" type="text/css" media="all" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css" type="text/css" media="all" />
+    <!-- Jquery UI Tab css -->
+    <link rel="stylesheet" href="assets/css/jquery-ui.min.css" type="text/css" media="all">
+    <!-- carousel CSS -->
+    <link rel="stylesheet" href="assets/css/owl.carousel.min.css" type="text/css" media="all" />
+    <!-- nivo-slider CSS -->
+    <link rel="stylesheet" href="assets/css/nivo-slider.css" type="text/css" media="all" />
+    <!-- animate CSS -->
+    <link rel="stylesheet" href="assets/css/animate.css" type="text/css" media="all" />
+    <!-- animated-text CSS -->
+    <link rel="stylesheet" href="assets/css/animated-text.css" type="text/css" media="all" />
+    <!-- font-awesome CSS -->
+    <link rel="stylesheet" href="assets/css/all.min.css" type="text/css" media="all" />
+    <!-- font-flaticon CSS -->
+    <link rel="stylesheet" href="assets/css/flaticon.css" type="text/css" media="all" />
+    <!-- theme-default CSS -->
+    <link rel="stylesheet" href="assets/css/theme-default.css" type="text/css" media="all" />
+    <!-- meanmenu CSS -->
+    <link rel="stylesheet" href="assets/css/meanmenu.min.css" type="text/css" media="all" />
+    <!-- Main Style CSS -->
+    <link rel="stylesheet" href="style.css" type="text/css" media="all" />
+    <!-- transitions CSS -->
+    <link rel="stylesheet" href="assets/css/owl.transitions.css" type="text/css" media="all" />
+    <!-- venobox CSS -->
+    <link rel="stylesheet" href="venobox/venobox.css" type="text/css" media="all" />
+    <!-- widget CSS -->
+    <link rel="stylesheet" href="assets/css/widget.css" type="text/css" media="all" />
+    <!-- Swiper Slider -->
+    <link rel="stylesheet" href="assets/css/animate.min.css" type="text/css" media="all">
+    <link rel="stylesheet" href="assets/css/custom-animation.css" type="text/css" media="all">
+    <link rel="stylesheet" href="assets/css/responsive.css" type="text/css" media="all">
+    
+    <!-- Add this before closing head tag -->
+    <style>
+        /* Custom Google Translate styles */
+        .translate-widget {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            z-index: 1000;
+        }
+        
+        .goog-te-gadget {
+            font-family: inherit !important;
+            color: #fff !important;
+        }
+        
+        .goog-te-gadget-simple {
+            background-color: rgba(0, 0, 0, 0.5) !important;
+            border: none !important;
+            padding: 8px 12px !important;
+            border-radius: 4px !important;
+            display: flex !important;
+            align-items: center !important;
+            cursor: pointer !important;
+        }
+        
+        .goog-te-gadget-simple img {
+            display: none !important;
+        }
+        
+        .goog-te-menu-value {
+            color: #fff !important;
+            text-transform: uppercase;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .goog-te-menu-value span {
+            color: #fff !important;
+        }
+        
+        .goog-te-menu-value span:hover {
+            color: #aa3bc5 !important;
+        }
+        
+        .goog-te-banner-frame {
+            display: none !important;
+        }
+        
+        body {
+            top: 0 !important;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Add this right after body tag -->
+    <div class="translate-widget">
+        <style>
+            .translate-widget {
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                z-index: 9999;
+                background: rgba(255, 255, 255, 0.9);
+                padding: 5px;
+                border-radius: 4px;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            }
+
+            .goog-te-gadget {
+                font-family: 'Arial', sans-serif !important;
+                margin-bottom: 0 !important;
+            }
+
+            .goog-te-gadget-simple {
+                background-color: #ffffff !important;
+                border: 1px solid #aa3bc5 !important;
+                padding: 4px 8px !important;
+                border-radius: 4px !important;
+                font-size: 12px !important;
+                line-height: 1.5em !important;
+                display: inline-flex !important;
+                align-items: center !important;
+                cursor: pointer;
+                margin: 0;
+            }
+
+            .goog-te-gadget-simple:hover {
+                border-color: #8e2ba3 !important;
+                background: #f8f9fa !important;
+            }
+
+            .goog-te-menu-value {
+                color: #aa3bc5 !important;
+                font-weight: 500;
+                display: flex !important;
+                align-items: center !important;
+            }
+
+            .goog-te-menu-value:hover {
+                color: #8e2ba3 !important;
+                text-decoration: none;
+            }
+
+            .goog-te-menu-value span {
+                color: #aa3bc5 !important;
+            }
+
+            .goog-te-banner-frame {
+                display: none !important;
+            }
+
+            /* Flag icons */
+            .translate-flag {
+                width: 16px;
+                height: 16px;
+                margin-right: 5px;
+                vertical-align: middle;
+                display: inline-block;
+                background-size: contain;
+                background-repeat: no-repeat;
+            }
+
+            .flag-en { background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2MCAzMCI+PHJlY3Qgd2lkdGg9IjYwIiBoZWlnaHQ9IjMwIiBmaWxsPSIjMDAwMDk1Ii8+PHBhdGggZD0iTTAsMHY1bDYwLDAiIHN0cm9rZT0id2hpdGUiLz48cGF0aCBkPSJNMCwxMHY1bDYwLDAiIHN0cm9rZT0id2hpdGUiLz48cGF0aCBkPSJNMCwyMHY1bDYwLDAiIHN0cm9rZT0id2hpdGUiLz48cGF0aCBkPSJNMCwzMHYtNWw2MCwwIiBzdHJva2U9InJlZCIvPjwvc3ZnPg=='); }
+            .flag-es { background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA3NTAgNTAwIj48cmVjdCB3aWR0aD0iNzUwIiBoZWlnaHQ9IjUwMCIgZmlsbD0iI2M2MDYwZiIvPjxyZWN0IHk9IjE2Ny4yIiB3aWR0aD0iNzUwIiBoZWlnaHQ9IjE2Ny4yIiBmaWxsPSIjZmZjNzAwIi8+PC9zdmc+'); }
+            .flag-fr { background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzIDIiPjxwYXRoIGZpbGw9IiMwMDAwOTUiIGQ9Ik0wIDBoMXYyaC0xeiIvPjxwYXRoIGZpbGw9IiNmZmZmZmYiIGQ9Ik0xIDBoMXYyaC0xeiIvPjxwYXRoIGZpbGw9IiNlZjQxMzUiIGQ9Ik0yIDBoMXYyaC0xeiIvPjwvc3ZnPg=='); }
+        </style>
+        <div id="google_translate_element"></div>
+    </div>
+
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'en',
+                includedLanguages: 'ar,uz,ru,tr,ur,hi',
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+                autoDisplay: false,
+                multilanguagePage: true
+            }, 'google_translate_element');
+
+            // Add flags after initialization
+            setTimeout(function() {
+                var selectElement = document.querySelector('.goog-te-combo');
+                if (selectElement) {
+                    Array.from(selectElement.options).forEach(function(option) {
+                        var langCode = option.value;
+                        if (langCode) {
+                            var flag = document.createElement('span');
+                            flag.className = 'translate-flag flag-' + langCode;
+                            option.prepend(flag);
+                        }
+                    });
+                }
+            }, 1000);
+        }
+    </script>
+    <!--==================================================-->
+    <!--Start Header Section-->
+    <!--===================================================-->
+    <div class="header-area" id="sticky-header">
+        <div class="container">
+            <div class="row align-items-center d-flex">
+                <div class="col-lg-3">
+                    <div class="header-logo" style="padding: 5px 0;">
+                        <a class="main-logo" href="index.html"><img src="assets/logo.png" alt="" style="height: 80px; width: auto;"></a>
+                        <a class="stiky-logo" href="index.html"><img src="assets/logo.png" alt="" style="height: 80px; width: auto;"></a>
+                    </div>
+                </div>
+                <div class="col-lg-9">
+                    <nav class="cryptozen_menu">
+                        <div class="header-menu">
+                            <ul class="nav_scroll">
+                             
+                                <li><a href="#about">About</a>
+                                </li>
+                              
+                                <li><a href="#roadmap">Road Map</a>
+                                </li>
+                                <li><a href="#howtobuy">How to Buy</a>
+                                </li>
+                                <li><a href="#faq">FAQS</a>
+                                </li>
+                            </ul>
+                            <div class="header-btn">
+                                <a href="https://sale.gnfstore.com/">Buy Now</a>
+                            </div>
+                          
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- mobile menu seection -->
+    <div class="mobile-menu-area d-sm-block d-md-block d-lg-none ">
+        <div class="mobile-menu">
+            <nav class="itsoft_menu">
+                <ul class="nav_scroll">
+                    
+                    <li><a href="#about">About</a>
+                    </li>
+                  
+                    <li><a href="#roadmap">Road Map</a>
+                    </li>
+                    <li><a href="#howtobuy">How to Buy</a>
+                    </li>
+                    <li><a href="#faq">FAQS</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+    <!--==================================================-->
+    <!--Start Carousel Slider Section-->
+    <!--===================================================-->
+    <div class="slider-area style-five d-flex align-items-center">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 col-md-6">
+                    <div class="slider-content">
+                        <h4 class="wow fadeInUp" data-wow-delay=".2s">Global Network Foundation</h4>
+                        <h1 class="wow fadeInUp" data-wow-delay=".4s">The Future of <span>Web3</span> Ecosystem</h1>
+                        <p class="wow fadeInUp" data-wow-delay=".6s">Join our revolutionary blockchain ecosystem featuring native GNF tokens, P2P exchanges, Web3 communication apps, and comprehensive DeFi solutions built on our own Global Network blockchain.</p>
+                        <div class="slider-button wow fadeInUp" data-wow-delay=".8s">
+                            <a href="https://sale.gnfstore.com">Buy Now</a>
+                        </div>
+                        <div class="slider-btn wow fadeInUp" data-wow-delay=".9s">
+                            <a href="#"> <i class="flaticon-file"> </i>Whitepaper</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="slider-thumb">
+                        <img src="assets/banner.png" alt="">
+                        <div class="hero-shape rotatemeTwo">
+                            <img src="assets/images/banner/five.png" alt="">
+                        </div>
+                        <div class="hero-shape3 rotateme">
+                            <img src="assets/images/banner/two.png" alt="">
+                        </div>
+                        <div class="hero-shape4">
+                            <img src="assets/images/new/two.png" alt="">
+                        </div>
+                        <div class="hero-shape5">
+                            <img src="assets/images/new/three.png" alt="">
+                        </div>
+                        <div class="hero-shape7 bounce-animate2">
+                            <img src="" alt="">
+                        </div>
+                        <div class="hero-shape8">
+                            <img src="" alt="">
+                        </div>
+                      
+                    </div>
+                </div>
+            </div>
+            <div class="shape-one bounce-animate3">
+                <img src="assets/images/banner/four.png" alt="">
+            </div>
+        </div>
+    </div>
+    <!-- feature section -->
+    <div class="feature-section pt-80">
+        <div class="container" id="howtobuy">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="dreamit-section-title two text-center pb-20">
+                        <div class="dreamit-section-sub-title">
+                            <h5 class="text-white"><img src="assets/images/new/title-img.png" alt=""> How to Buy</h5>
+                        </div>
+                        <div class="dreamit-section-main-title">
+                            <h1 class="text-white">Purchase on Multiple Networks</h1>
+                        </div>
+                        <div class="dreamit-section-content-text">
+                            <p class="text-white">Learn how to buy GNF tokens on different blockchain networks</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-4 col-md-6">
+                    <div class="single-feature-box">
+                        <div class="feature-thumb">
+                            <div class="video-container" style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
+                                <!-- Custom thumbnail overlay -->
+                                <div class="video-thumbnail" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; cursor: pointer;">
+                                    <img src="assets/polygon.png" style="width: 100%; height: 100%; object-fit: cover;">
+                                    <div class="play-button" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(170, 59, 197, 0.8); width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                        <i class="fas fa-play" style="color: white; font-size: 24px;"></i>
+                                    </div>
+                                </div>
+                                <!-- YouTube iframe (initially hidden) -->
+                                <iframe style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: none;" 
+                                    src="https://www.youtube.com/embed/YOUR_POLYGON_VIDEO_ID" 
+                                    frameborder="0" 
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                    allowfullscreen>
+                                </iframe>
+                            </div>
+                        </div>
+                        <div class="feature-content">
+                            <h3>Buy on Polygon</h3>
+                        </div>
+                        <div class="shape">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="single-feature-box">
+                        <div class="feature-thumb">
+                            <div class="video-container" style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
+                                <!-- Custom thumbnail overlay -->
+                                <div class="video-thumbnail" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; cursor: pointer;">
+                                    <img src="assets/bnb.png" style="width: 100%; height: 100%; object-fit: cover;">
+                                    <div class="play-button" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(170, 59, 197, 0.8); width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                        <i class="fas fa-play" style="color: white; font-size: 24px;"></i>
+                                    </div>
+                                </div>
+                                <!-- YouTube iframe (initially hidden) -->
+                                <iframe style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: none;" 
+                                    src="https://www.youtube.com/embed/YOUR_BNB_VIDEO_ID" 
+                                    frameborder="0" 
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                    allowfullscreen>
+                                </iframe>
+                            </div>
+                        </div>
+                        <div class="feature-content">
+                            <h3>Buy on BNB</h3>
+                        </div>
+                        <div class="shape">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="single-feature-box">
+                        <div class="feature-thumb">
+                            <div class="video-container" style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
+                                <!-- Custom thumbnail overlay -->
+                                <div class="video-thumbnail" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; cursor: pointer;">
+                                    <img src="assets/avax.png" style="width: 100%; height: 100%; object-fit: cover;">
+                                    <div class="play-button" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(170, 59, 197, 0.8); width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                        <i class="fas fa-play" style="color: white; font-size: 24px;"></i>
+                                    </div>
+                                </div>
+                                <!-- YouTube iframe (initially hidden) -->
+                                <iframe style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: none;" 
+                                    src="https://www.youtube.com/embed/YOUR_AVAX_VIDEO_ID" 
+                                    frameborder="0" 
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                    allowfullscreen>
+                                </iframe>
+                            </div>
+                        </div>
+                        <div class="feature-content">
+                            <h3>Buy on AVAX</h3>
+                        </div>
+                        <div class="shape">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Add script at the end -->
+    <script>
+        // Add click handlers for all video thumbnails
+        document.querySelectorAll('.video-thumbnail').forEach(function(thumbnail) {
+            thumbnail.addEventListener('click', function() {
+                this.style.display = 'none';
+                this.nextElementSibling.style.display = 'block';
+            });
+        });
+    </script>
+    <!-- about section -->
+  
+    <!-- token -section -->
+  
+
+    <!-- About Us section -->
+    <div class="choose-section style-two pt-90 pb-70">
+        <div class="container" id="about">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <div class="dreamit-section-title two pb-20">
+                        <div class="dreamit-section-sub-title">
+                            <h5> <img src="assets/images/new/title-img.png" alt=""> About Us</h5>
+                        </div>
+                        <div class="dreamit-section-main-title">
+                            <h1>Building the Future of <br>Blockchain Technology</h1>
+                        </div>
+                        <div class="dreamit-section-content-text">
+                            <p>Global Network Foundation is pioneering the next generation of blockchain infrastructure. Our ecosystem combines cutting-edge technology with user-friendly applications to make blockchain accessible to everyone.</p>
+                        </div>
+                        <div class="dreamit-content-text-inner">
+                            <P>We're building a comprehensive suite of Web3 solutions including decentralized exchanges, P2P platforms, and communication apps - all powered by our native GNF token and running on our own blockchain network.</P>
+                        </div>
+                        <div class="choose-btn">
+                            <a href="https://sale.gnfstore.com/"><i class="flaticon-plus"></i> Buy Now </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6">
+                    <div class="choose-thumb">
+                        <img src="assets/images/new/single.png" alt="About Global Network Foundation">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- table -->
+ 
+    <!-- road map section -->
+    <div class="road-map style-two upper pt-100 pb-50">
+        <div class="container" id="roadmap">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="dreamit-section-title two text-center pb-20">
+                        <div class="dreamit-section-sub-title">
+                            <h5> <img src="assets/images/new/title-img.png" alt=""> Road Map</h5>
+                        </div>
+                        <div class="dreamit-section-main-title">
+                            <h1>Our Strategy & Roadmap</h1>
+                        </div>
+                        <div class="dreamit-section-content-text">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row pt-75">
+                <div class="col-lg-1 col-md-1"></div>
+                <div class="col-lg-10">
+                    <div class="row">
+                        <div class="col-lg-4 col-md-6">
+                            <div class="single-road-map-box">
+                                <div class="single-road-map-content">
+                                </div>
+                                <div class="road-map-content-inner">
+                                    <h4>2024-Q1&Q3</h4>
+                                    <p>Brand Setup</p>
+                                    <p>Project Launch</p>
+                                    <p>Wallet Setup</p>
+                                    <p>Dex and P2P Applications</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6">
+                            <div class="single-road-map-box">
+                                <div class="single-road-map-content">
+                                </div>
+                                <div class="road-map-content-inner">
+                                    <h4>2024-Q4</h4>
+                                    <p>Wallet Launch</p>
+                                    <p>Seed Sale</p>
+                                    <p>Airdrop</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6">
+                            <div class="single-road-map-box">
+                                <div class="single-road-map-content">
+                                </div>
+                                <div class="road-map-content-inner">
+                                    <h4>2025-Q1</h4>
+                                    <p>Token Private Sale</p>
+                                    <p>MEXC Exchange</p>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-1 col-md-1"></div>
+            </div>
+            <div class="row tooper pt-55">
+                <div class="col-lg-2"></div>
+                <div class="col-lg-8">
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6">
+                            <div class="single-road-map-box two">
+                                <div class="single-road-map-content">
+                                </div>
+                                <div class="road-map-content-inner">
+                                    <h4>2025-Q2</h4>
+                                    <p>Decentralized Social Media</p>
+                                    <p>Application Launch</p>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6">
+                            <div class="single-road-map-box two">
+                                <div class="single-road-map-content">
+                                </div>
+                                <div class="road-map-content-inner">
+                                    <h4>2025-Q3</h4>
+                                    <p>StableCoin</p>
+                                    <p>Exchange Listings</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-2"></div>
+            </div>
+            <div class="row tooper pt-55">
+                <div class="col-lg-1 col-md-1"></div>
+
+                <div class="col-lg-10">
+                    <div class="row">
+                        <div class="col-lg-4 col-md-6">
+                            <div class="single-road-map-box">
+                                <div class="single-road-map-content">
+                                
+                                </div>
+                                <div class="road-map-content-inner">
+                                    <h4>2025-Q4</h4>
+                                    <p>Community Events</p>
+                                    <p>Rewards and Incentives</p>
+                                    <p> Expansion of GNF</p>
+                                    <p> Token Use Cases</p>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6">
+                            <div class="single-road-map-box">
+                                <div class="single-road-map-content">
+                                  
+                                </div>
+                                <div class="road-map-content-inner">
+                                    <h4>2026</h4>
+                                    <p>New Partnerships</p>
+                                    <p>Global Exchange Listings</p>
+                                    <p> Integration Of Global Network</p>
+                                    <p> With Exchanges</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6">
+                            <div class="single-road-map-box">
+                                <div class="single-road-map-content">
+                                </div>
+                                <div class="road-map-content-inner">
+                                    <h4>2027</h4>
+                                    <p>Marketing Developement Innvation</p>
+                                  
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-1 col-md-1"></div>
+                <div class="shape16">
+                    <img src="assets/images/new/road.png" alt="">
+                </div>
+            </div>
+            <div class="shape17 bounce-animate2">
+                <img src="assets/images/new/round.png" alt="">
+            </div>
+        </div>
+    </div>
+    <!-- graph section -->
+ 
+
+    <!-- call section -->
+
+    <!-- team section -->
+
+    <!-- faq section -->
+    <div class="faq-section style-four pt-100 pb-100">
+        <div class="container" id="faq">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="dreamit-section-title two text-center pb-20">
+                        <div class="dreamit-section-sub-title">
+                            <h5> <img src="assets/images/new/title-img.png" alt=""> FAQS</h5>
+                        </div>
+                        <div class="dreamit-section-main-title">
+                            <h1>Frequently asked Question</h1>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+            <div class="row pt-25">
+                <div class="col-lg-12">
+                    <div class="tab-content text-center">
+                        <ul class="tabs">
+                            <li class="active" rel="tab1">General </li>
+                            <li rel="tab2"> Token </li>
+                            <li rel="tab3"> Presale </li>
+                            <li rel="tab4"> Referral</li>
+                       
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="row align-items-center pt-20">
+                <div class="col-lg-6 col-md-12">
+                    <div class="tab_container">
+                        <h3 class="d_active tab_drawer_heading" rel="tab1">Tab 1</h3>
+                        <div id="tab1" class="tab_content">
+                            <ul class="accordion">
+                                <li>
+                                    <a>What is Global Network Foundation?</a>
+                                    <p>Global Network Foundation is an innovative blockchain ecosystem that features its own blockchain called Global Network. The ecosystem includes various Web3 solutions including crypto wallets, P2P platform, DEX (decentralized exchange), and Web3 communication applications, all powered by GNF, our native token.</p>
+                                </li>
+                                <li>
+                                    <a>What makes Global Network unique?</a>
+                                    <p>Global Network stands out with its comprehensive ecosystem that includes its own blockchain, native token (GNF), crypto wallets, P2P platform, DEX, and Web3 communication applications. This integrated approach ensures a seamless Web3 experience for users across different blockchain services</p>
+                                </li>
+                            
+                            </ul>
+                        </div>
+                        <!-- #tab1 -->
+                        <h3 class="tab_drawer_heading" rel="tab2"> Token </h3>
+                        <div id="tab2" class="tab_content">
+                            <ul class="accordion">
+                                <li>
+                                    <a>What are the different token tiers available</a>
+                                    <p>We offer four token tiers: GNF10, GNF100, GNF1000, and GNF10000. These tokens act as tickets for early investors and can be swapped for our native GNF token at listing time. Each tier comes with unique benefits and different vesting periods. GNF100 is specifically reserved for airdrops and referral rewards</p>
+                                </li>
+                                <li>
+                                    <a>What happens after the token listing?</a>
+                                    <p>After GNF is listed on major exchanges and DEXs, holders of our ticket tokens (GNF10, GNF1000, GNF10000) can swap them for the native GNF token. Additionally, eligible holders will receive GNF100 airdrops as a reward for their early support.</p>
+                                </li>
+                               
+                            </ul>
+                        </div>
+                        <!-- #tab2 -->
+                        <h3 class="tab_drawer_heading" rel="tab3"> Presale </h3>
+                        <div id="tab3" class="tab_content">
+
+                            <ul class="accordion">
+                                <li>
+                                    <a>How do the presale tokens work?</a>
+                                    <p>The presale tokens (GNF10, GNF1000, GNF10000) are deployed on our Global Network blockchain and serve as tickets. At the time of GNF's listing on major exchanges and DEXs, these tokens can be swapped for the native GNF token. This gives our early investors a privileged position in the ecosystem</p>
+                                </li>
+                                <li>
+                                    <a>Which payment methods are accepted?</a>
+                                    <p>We accept (matic , bnb , avax , usdt(matic , bnb , avax)) </p>
+                                </li>
+                                <li>
+                                    <a>"How do I see the tokens I purchase in my wallet?</a>
+                                    <p>First, add Global Network Foundation network to your wallet using the 'Add Global Network' button in the footer. Then, import these custom tokens using their contract addresses:  <ul style="list-style: none; padding-left: 20px;">
+                                        <li>• GNF10: 0xAEd556A73beAE48868967ED3755D02fd4a2f62E4</li>
+                                        <li>• GNF100: 0x4D15A4239b5A1f6f71eF56345f1c5c54911399F9</li>
+                                        <li>• GNF1000: 0x390D5B3A854864CAF342008b61cE4b8b9716bda8</li>
+                                        <li>• GNF10000: 0x4C9c0772A58ad89844C7B6Eb701B2E0ED34a9601</li>
+                                    </ul></p>
+                                  
+                                </li>
+                               
+                            </ul>
+                        </div>
+                        <!-- #tab3 -->
+                        <h3 class="tab_drawer_heading" rel="tab4">Referral </h3>
+                        <div id="tab4" class="tab_content">
+
+                            <ul class="accordion">
+                                <li>
+
+                                    <a>How does the referral system work?</a>
+                                    <p>Our referral system rewards promoters with GNF100 tokens. When someone purchases tokens through your referral link, you earn a commission in GNF100. This creates a win-win situation for both the referrer and the ecosystem</p>
+                                </li>
+                                <li>
+
+                                    <a>What is GNF100 and how can I earn it?</a>
+                                    <p>GNF100 is our reward token that serves two purposes: 1) It's given as an airdrop to investors holding any of our three ticket tokens (GNF10, GNF1000, GNF10000) at the time of listing, 2) It's awarded as commission to users who promote our platform through their referral links</p>
+                                </li>
+                            </ul>
+                        </div>
+                        <!-- #tab3 -->
+                       
+                        <!-- #tab4 -->
+                    </div>
+                    <!-- .tab_container -->
+                </div>
+                <div class="col-lg-6 col-md-12">
+                    <div class="faq-thumb">
+                        <img src="assets/images/faq.png" alt="">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- start blog section -->
+  
+    <!-- contact section -->
+   
+    <!--==================================================-->
+    <!--START FOOTER SECTION-->
+    <!--===================================================-->
+    <div class="footer pt-100">
+        <div class="container">
+            <div class="row">
+                
+               
+               
+              
+            </div>
+            <div class="row upper11 mt-50 align-items-center">
+                <div class="col-lg-6 col-md-6">
+                    <div class="footer-about-social-icon pt-20">
+                        <ul>
+                            <li>
+                                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                            </li>
+                            <li>
+                                <a href="#"><i class="fa-brands fa-x-twitter"></i></a>
+                            </li>
+                            <li>
+                                <a href="#"><i class="fab fa-pinterest"></i></a>
+                            </li>
+                            <li>
+                                <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="footer-copyright-text">
+                        <p class="text-white">Copyright © Global Network all rights reserved. </p>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6">
+                    <div class="footer-copyright-content">
+                        <div class="footer-sicial-address-link">
+                            <ul>
+                                <li><a href="#about">About</a></li>
+                                <li><a href="#howtobuy">How to Buy</a></li>
+                                <li><a href="#faq">FAQ</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--==================================================-->
+    <!-- Start Search Popup Area -->
+    <!--==================================================-->
+    <div class="search-popup">
+        <button class="close-search style-two"><i class="fas fa-times"></i></button>
+        <button class="close-search"><i class="fas fa-arrow-up"></i></button>
+        <form method="post" action="#">
+            <div class="form-group">
+                <input type="search" name="search-field" value="" placeholder="Search Here" required="">
+                <button type="submit"><i class="fas fa-search"></i></button>
+            </div>
+        </form>
+    </div>
+    <!--==================================================-->
+    <!--start sidebar  SECTION-->
+    <!--===================================================-->
+
+    <!-- Sidebar Cart Item -->
+    <div class="xs-sidebar-group info-group">
+        <div class="dt-overlay bt-black"></div>
+        <div class="dt-sidebar-widget">
+            <div class="sidebar-container">
+                <div class="widget-top">
+                    <a href="#" class="close">
+						X
+					</a>
+                </div>
+                <div class="sidebar-textwidget">
+
+                    <!-- Sidebar Info Content -->
+                    <div class="sidebar-info-contents">
+                        <div class="content-inner">
+                            <div class="logo">
+                                <a href="index.html"><img src="assets/images/one.png" alt="" /></a>
+                            </div>
+                            <div class="content-text">
+                                <p class="text-white">The argument in placerat vitae lacus ut scelerisque. Fusce luctus odio ac nibh luctus, in porttitor theo lacus egestas etiusto odio data center.</p>
+
+                            </div>
+                            <div class="contact-info">
+                                <div class="location-content d-flex">
+                                    <div class="location-icon">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                    </div>
+                                    <div class="location-content-text">
+                                        <p>13/A Tropical center Rs <br>london WC1B 4EA </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="footer-location-box">
+                                <div class="location-content d-flex">
+                                    <div class="location-icon">
+                                        <i class="fas fa-phone-alt"></i>
+                                    </div>
+                                    <div class="location-content-text">
+                                        <p>+8 91230 456 788</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="footer-location-box">
+                                <div class="location-content">
+                                    <div class="location-title">
+                                        <h2>Open Hours</h2>
+                                    </div>
+                                    <div class="location-content-text">
+                                        <p>Mon-Sat: 8 am-5 pm <br>Sunday Closed</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Social Box -->
+                        <div class="social-icon pt-40">
+                            <ul>
+                                <li>
+                                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                                </li>
+                                <li>
+                                    <a href="#"><i class="fa-brands fa-x-twitter"></i></a>
+                                </li>
+                                <li>
+                                    <a href="#"><i class="fab fa-pinterest"></i></a>
+                                </li>
+                                <li>
+                                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!--==================================================-->
+    <!--start fTo Top-->
+    <!--===================================================-->
+    <div class="scroll-area">
+        <div class="top-wrap">
+            <div class="go-top-btn-wraper">
+                <div class="go-top go-top-button">
+                    <i class="fas fa-arrow-up"></i>
+                    <i class="fas fa-arrow-up"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- jquery js -->
+    <script src="assets/js/vendor/jquery-3.2.1.min.js"></script>
+    <!-- bootstrap js -->
+    <script src="assets/js/bootstrap.min.js"></script>
+    <!-- carousel js -->
+    <script src="assets/js/owl.carousel.min.js"></script>
+    <!-- counterup js -->
+    <script src="assets/js/jquery.counterup.min.js"></script>
+    <!-- waypoints js -->
+    <script src="assets/js/waypoints.min.js"></script>
+    <!-- appear js -->
+    <script src="assets/js/jquery.appear.js"></script>
+    <!-- wow js -->
+    <script src="assets/js/wow.min.js"></script>
+    <!-- imagesloaded js -->
+    <script src="assets/js/imagesloaded.pkgd.min.js"></script>
+    <!-- venobox js -->
+    <script src="venobox/venobox.js"></script>
+    <!-- ajax mail js -->
+    <script src="assets/js/ajax-mail.js"></script>
+    <!--  animated-text js -->
+    <script src="assets/js/animated-text.js"></script>
+    <!-- venobox min js -->
+    <script src="venobox/venobox.min.js"></script>
+    <!-- isotope js -->
+    <script src="assets/js/isotope.pkgd.min.js"></script>
+    <!-- jquery nivo slider pack js -->
+    <script src="assets/js/jquery.nivo.slider.pack.js"></script>
+    <!-- jquery meanmenu js -->
+    <script src="assets/js/jquery.meanmenu.js"></script>
+    <!-- jquery scrollup js -->
+    <script src="assets/js/jquery.scrollUp.js"></script>
+    <!-- Jquery UI Tab JS -->
+    <script src="assets/js/jquery-ui.min.js"></script>
+    <!--Swiper Slider-->
+    <script src="assets/js/swiper.min.js"></script>
+    <!--theme js-->
+    <script src="assets/js/wow.min.js"></script>
+    <script src="assets/js/theme.js"></script>
+    <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+    <!--jquery js-->
+    <script>
+        $(window).on('scroll', function() {
+            var scrolled = $(window).scrollTop();
+            if (scrolled > 300) $('.go-top').addClass('active');
+            if (scrolled < 300) $('.go-top').removeClass('active');
+        });
+
+        $('.go-top').on('click', function() {
+            $("html, body").animate({
+                scrollTop: "0"
+            }, 1200);
+        });
+    </script>
+
+    <script>
+        "use strict";
+        jQuery,
+        jQuery(document).ready(function(o) {
+            0 < o(".offset-side-bar").length &&
+                o(".offset-side-bar").on("click", function(e) {
+                    e.preventDefault(), e.stopPropagation(), o(".cart-group").addClass("isActive");
+                }),
+                0 < o(".close").length &&
+                o(".close").on("click", function(e) {
+                    e.preventDefault(), o(".cart-group").removeClass("isActive");
+                }),
+                0 < o(".navSidebar-button").length &&
+                o(".navSidebar-button").on("click", function(e) {
+                    e.preventDefault(), e.stopPropagation(), o(".info-group").addClass("isActive");
+                }),
+                0 < o(".close").length &&
+                o(".close").on("click", function(e) {
+                    e.preventDefault(), o(".info-group").removeClass("isActive");
+                }),
+                o("body").on("click", function(e) {
+                    o(".info-group").removeClass("isActive"), o(".cart-group").removeClass("isActive");
+                }),
+                o(".dt-sidebar-widget").on("click", function(e) {
+                    e.stopPropagation();
+                }),
+                0 < o(".xs-modal-popup").length &&
+                o(".xs-modal-popup").magnificPopup({
+                    type: "inline",
+                    fixedContentPos: !1,
+                    fixedBgPos: !0,
+                    overflowX: "auto",
+                    closeBtnInside: !1,
+                    callbacks: {
+                        beforeOpen: function() {
+                            this.st.mainClass = "my-mfp-slide-bottom xs-promo-popup";
+                        },
+                    },
+                });
+        });
+    </script>
+    <script>
+        // Set the date we're counting down to
+        var countDownDate = new Date("November 30, 2024 15:37:25").getTime();
+
+        // Update the count down every 1 second
+        var x = setInterval(function() {
+
+            // Get today's date and time
+            var now = new Date().getTime();
+
+            // Find the distance between now and the count down date
+            var distance = countDownDate - now;
+
+            // Time calculations for days, hours, minutes and seconds
+            var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            // Output the result in an element with id="demo"
+
+            //document.getElementById("demo").innerHTML = days + "d " + hours + "h "
+            +
+            minutes + "m " + seconds + "s ";
+
+            document.getElementById("days").innerHTML = days;
+            document.getElementById("hours").innerHTML = hours;
+            document.getElementById("minutes").innerHTML = minutes;
+            document.getElementById("seconds").innerHTML = seconds;
+
+            // If the count down is over, write some text 
+            if (distance < 0) {
+                clearInterval(x);
+                document.getElementById("demo").innerHTML = "EXPIRED";
+            }
+        }, 1000);
+    </script>
+    <script>
+        /* Extra class "tab_last" 
+             to add border to right side
+             of last tab */
+        $('ul.tabs li').last().addClass("tab_last");
+
+        $(document).ready(function() {
+            $('#example').DataTable();
+
+            $('#avaiable').on('click', function() {
+                $('.single').show();
+                $('.double').hide();
+                $('.one').hide();
+                $('triple').hide();
+            });
+
+            $('#gainers').on('click', function() {
+                $('triple').show();
+                $('.single').hide();
+                $('.double').hide();
+            });
+
+            $('#losers').on('click', function() {
+                $('triple').hide();
+                $('.single').hide();
+                $('.double').hide();
+                $('.one').show();
+            });
+
+            $('#date').on('click', function() {
+                $('triple').hide();
+                $('.single').hide();
+                $('.double').hide();
+                $('.one').hide();
+                $('.two').show();
+            });
+            $('#all_token').on('click', function() {
+                $('triple').show();
+                $('.single').show();
+                $('.double').show();
+                $('.two').show();
+                $('.one').show();
+            });
+
+        });
+    </script>
+    <script>
+        var xValues = ["Contingency", "France", "Spain", "USA", "Argentina"];
+        var yValues = [40, 49, 44, 24, 15];
+        var barColors = [
+            "#AA3BC5",
+            "#09B1F2",
+            "#1FD5A4",
+            "#FEB81A",
+            "#F97431"
+        ];
+        new Chart("myChart", {
+            type: "polarArea",
+            data: {
+                labels: xValues,
+                datasets: [{
+                    label: 'Dataset 1',
+                    backgroundColor: barColors,
+                    data: yValues
+                }]
+            },
+            options: {
+                title: {
+                    display: true,
+                    text: "World Wide Wine Production 2018"
+                },
+            }
+        });
+
+        // Style Two
+        var xValues = ["Italy", "France", "Spain", "USA", "Argentina"];
+        var yValues = [55, 49, 44, 24, 15];
+        var barColors = [
+            "#4DB866",
+            "#EDB019",
+            "#E36D23",
+            "#F08A1E",
+            "#39A2D1"
+        ];
+
+        new Chart("yourChart", {
+            type: "doughnut",
+            data: {
+                labels: xValues,
+                datasets: [{
+                    backgroundColor: barColors,
+                    data: yValues
+                }]
+            },
+            options: {
+                title: {
+                    display: true,
+                    text: "World Wide Wine Production 2018"
+                },
+            }
+        });
+    </script>
+    
+    <!-- Add this before closing body tag -->
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'en',
+                includedLanguages: 'ar,uz,ru,tr,ur,hi',
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+            }, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+</body>
+
+</html>

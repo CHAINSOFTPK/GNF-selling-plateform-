@@ -1,17 +1,16 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { FaChartLine, FaTelegram, FaTwitter, FaDiscord, FaYoutube, FaGlobe, FaBars, FaTimes } from 'react-icons/fa';
-import { BiWallet } from 'react-icons/bi';
+import { FaChartLine, FaBars, FaTimes } from 'react-icons/fa';
 import ConnectWallet from './ConnectWallet';
-import { useWallet } from '../context/Web3Context'; // Changed from WalletContext
+import { useWallet } from '../context/Web3Context';
 
 const Header: React.FC = () => {
-    const { account, connectWallet } = useWallet(); // Updated to use Web3Context properties
+    const { account, connectWallet } = useWallet();
     const navigate = useNavigate();
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-    const isConnected = !!account; // Add connection check
+    const isConnected = !!account;
 
     const handleDashboardClick = async () => {
         if (isConnected && account) {
@@ -27,56 +26,41 @@ const Header: React.FC = () => {
         }
     };
 
+    const navLinks = [
+        { title: 'Home', path: 'https://www.gnfstore.com/' },
+        { title: 'About', path: 'https://www.gnfstore.com/#about' },
+        { title: 'How to Buy', path: 'https://www.gnfstore.com/#howtobuy' },
+        { title: 'FAQ', path: 'https://www.gnfstore.com/#faq' },
+    ];
+
+    // Add this function to handle external navigation
+    const handleNavigation = (path: string) => {
+        window.location.href = path;
+    };
+
     return (
-        <header className="bg-white shadow-md border-b border-gray-100 relative z-50"> {/* Added z-50 */}
+        <header className="bg-transparent shadow-md relative z-50">
             {/* Desktop Header */}
-            <div className="hidden md:flex justify-between items-center px-6 py-3 relative"> {/* Added relative */}
-                <div className="absolute -top-8 -left-8 w-32 h-32 bg-[#08B4A6]/10 rounded-full blur-2xl pointer-events-none" />
+            <div className="hidden md:flex justify-between items-center px-6 py-3 relative">
                 <div className="flex items-center cursor-pointer hover:opacity-80 transition-opacity relative pointer-events-auto" onClick={() => navigate('/')}>
                     <img 
-                        src="https://i.ibb.co/F4n00MP/bfecf737-844d-4a6c-ba16-9052fad6c92a.png" 
+                        src="https://i.postimg.cc/ZY1Z7dYH/logo.png" 
                         alt="GNF Logo" 
                         className="h-12" 
                     />
                 </div>
                 
-                {/* Social Icons - Desktop */}
-                <div className="flex-1 flex justify-center items-center relative pointer-events-auto" style={{ marginLeft: '130px' }}>
-                    <div className="flex items-center space-x-6">
-                        <a 
-                            href="https://t.me/megapayer" 
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                            className="text-[#08B4A6] hover:text-[#079e92] transition-colors duration-300 hover:scale-110 transform pointer-events-auto"
+                {/* Navigation Links - Desktop */}
+                <div className="flex-1 flex justify-center items-center space-x-8">
+                    {navLinks.map((link) => (
+                        <button
+                            key={link.path}
+                            onClick={() => handleNavigation(link.path)}
+                            className="text-white hover:text-[#08B4A6] transition-colors duration-300"
                         >
-                            <FaTelegram size={24} style={{ color: '#08B4A6' }} />
-                        </a>
-                        <a 
-                            href="https://twitter.com/megapayer" 
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                            className="text-[#08B4A6] hover:text-[#079e92] transition-colors duration-300 hover:scale-110 transform pointer-events-auto"
-                        >
-                            <FaTwitter size={24} style={{ color: '#08B4A6' }} />
-                        </a>
-                        <a 
-                            href="https://discord.gg/NVqRsTnQ" 
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                            className="text-[#08B4A6] hover:text-[#079e92] transition-colors duration-300 hover:scale-110 transform pointer-events-auto"
-                        >
-                            <FaDiscord size={24} style={{ color: '#08B4A6' }} />
-                        </a>
-                        <a 
-                            href="https://www.youtube.com/@Megapayer_io" 
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                            className="text-[#08B4A6] hover:text-[#079e92] transition-colors duration-300 hover:scale-110 transform pointer-events-auto"
-                        >
-                            <FaYoutube size={24} style={{ color: '#08B4A6' }} />
-                        </a>
-                       
-                    </div>
+                            {link.title}
+                        </button>
+                    ))}
                 </div>
 
                 {/* Buttons - Desktop */}
@@ -85,8 +69,8 @@ const Header: React.FC = () => {
                         <>
                             <button
                                 onClick={handleDashboardClick}
-                                className="flex items-center space-x-2 bg-[#08B4A6] hover:bg-[#079e92] text-white text-sm font-semibold py-1.5 px-4 rounded-md shadow-sm transition-all duration-200 hover:scale-105 w-32 pointer-events-auto"
-                                style={{ backgroundColor: '#08B4A6' }}
+                                style={{ backgroundColor: '#22054Ed' }}
+                                className="flex items-center space-x-2 hover:bg-[#1e0444] text-white text-sm font-semibold py-1.5 px-4 rounded-md shadow-sm transition-all duration-200 hover:scale-105 w-32"
                             >
                                 <FaChartLine className="text-white" />
                                 <span>Dashboard</span>
@@ -95,15 +79,14 @@ const Header: React.FC = () => {
                         </>
                     )}
                     <div className="pointer-events-auto">
-                        <ConnectWallet /> {/* Remove icon prop */}
+                        <ConnectWallet />
                     </div>
                 </div>
             </div>
 
             {/* Mobile Header */}
-            <div className="md:hidden relative pointer-events-auto">
+            <div className="md:hidden relative">
                 <div className="flex justify-between items-center px-4 py-3">
-                    {/* Logo */}
                     <div className="flex items-center" onClick={() => navigate('/')}>
                         <img src="https://i.ibb.co/F4n00MP/bfecf737-844d-4a6c-ba16-9052fad6c92a.png" 
                              alt="GNF Logo" 
@@ -111,7 +94,6 @@ const Header: React.FC = () => {
                         />
                     </div>
 
-                    {/* Mobile Menu Button */}
                     <button 
                         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                         className="text-[#08B4A6] p-2"
@@ -122,47 +104,26 @@ const Header: React.FC = () => {
 
                 {/* Mobile Menu */}
                 {isMobileMenuOpen && (
-                    <div className="absolute top-full left-0 right-0 bg-white shadow-lg border-t border-gray-100 z-50">
+                    <div className="absolute top-full left-0 right-0 bg-white shadow-lg z-50">
                         <div className="p-4 space-y-4">
-                            {/* Social Icons - Mobile */}
-                            <div className="flex justify-center space-x-6 py-4 border-b border-gray-100">
-                                <a 
-                                    href="https://t.me/yourgroup" 
-                                    target="_blank" 
-                                    rel="noopener noreferrer"
-                                    className="text-[#08B4A6] hover:text-[#079e92] transition-colors duration-300 hover:scale-110 transform"
-                                >
-                                    <FaTelegram size={24} style={{ color: '#08B4A6' }} />
-                                </a>
-                                <a 
-                                    href="https://twitter.com/yourprofile" 
-                                    target="_blank" 
-                                    rel="noopener noreferrer"
-                                    className="text-[#08B4A6] hover:text-[#079e92] transition-colors duration-300 hover:scale-110 transform"
-                                >
-                                    <FaTwitter size={24} style={{ color: '#08B4A6' }} />
-                                </a>
-                                <a 
-                                    href="https://discord.gg/yourinvite" 
-                                    target="_blank" 
-                                    rel="noopener noreferrer"
-                                    className="text-[#08B4A6] hover:text-[#079e92] transition-colors duration-300 hover:scale-110 transform"
-                                >
-                                    <FaDiscord size={24} style={{ color: '#08B4A6' }} />
-                                </a>
-                                <a 
-                                    href="https://youtube.com/@yourchannel" 
-                                    target="_blank" 
-                                    rel="noopener noreferrer"
-                                    className="text-[#08B4A6] hover:text-[#079e92] transition-colors duration-300 hover:scale-110 transform"
-                                >
-                                    <FaYoutube size={24} style={{ color: '#08B4A6' }} />
-                                </a>
-                                
+                            {/* Navigation Links - Mobile */}
+                            <div className="flex flex-col space-y-3">
+                                {navLinks.map((link) => (
+                                    <button
+                                        key={link.path}
+                                        onClick={() => {
+                                            handleNavigation(link.path);
+                                            setIsMobileMenuOpen(false);
+                                        }}
+                                        className="text-white-700 hover:text-[#08B4A6] py-2 text-left"
+                                    >
+                                        {link.title}
+                                    </button>
+                                ))}
                             </div>
 
                             {/* Buttons - Mobile */}
-                            <div className="space-y-3">
+                            <div className="space-y-3 pt-3 border-t border-gray-100">
                                 {isConnected && (
                                     <button
                                         onClick={handleDashboardClick}
@@ -172,7 +133,7 @@ const Header: React.FC = () => {
                                         <span>Dashboard</span>
                                     </button>
                                 )}
-                                <ConnectWallet /> {/* Remove icon prop here too */}
+                                <ConnectWallet />
                             </div>
                         </div>
                     </div>

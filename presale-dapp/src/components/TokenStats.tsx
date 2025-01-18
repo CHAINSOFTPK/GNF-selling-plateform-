@@ -16,7 +16,7 @@ const StatItem: React.FC<StatItemProps> = ({ icon, label, value, delay }) => (
         transition={{ delay }}
         className="flex items-center gap-4 p-4 bg-white/50 rounded-xl backdrop-blur-sm"
     >
-        <div className="p-3 bg-[#08B4A6]/10 rounded-full text-[#08B4A6]">
+        <div className="p-3 bg-[#0194FC]/10 rounded-full text-[#0194FC]">
             {icon}
         </div>
         <div>

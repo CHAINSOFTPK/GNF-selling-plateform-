@@ -46,13 +46,13 @@ const AddNetwork: React.FC<AddNetworkProps> = ({ buttonText }) => {
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
       onClick={handleAddNetwork}
-      style={{ backgroundColor: '#329991' }}
-      className="flex items-center space-x-2 text-white px-4 py-2 rounded-lg 
+      style={{ backgroundColor: '#0194FC', width: 'auto', height: '50px', padding: '0 10px' }}
+      className="flex items-center justify-center text-white rounded-lg 
                  transition-all duration-200 hover:brightness-110"
     >
-      <FaNetworkWired className="text-xl" />
-      <FaPlus className="text-sm" />
-      <span>{buttonText || 'Add Network'}</span>
+      <FaNetworkWired className="text-xl mr-2" />
+      {buttonText && <span>{buttonText}</span>}
+      <FaPlus className="text-sm ml-2" />
     </motion.button>
   );
 };

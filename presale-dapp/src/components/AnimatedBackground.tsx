@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 const AnimatedBackground: React.FC = () => {
     return (
         <div className="fixed inset-0 -z-10">
-            <div className="absolute inset-0 bg-gradient-to-b from-white to-[#08B4A6]/5" />
+            <div className="absolute inset-0 bg-gradient-to-b from-white to-[#0194FC]/5" />
             
             {/* Animated circles */}
             <motion.div
@@ -16,7 +16,7 @@ const AnimatedBackground: React.FC = () => {
                     duration: 8,
                     repeat: Infinity,
                 }}
-                className="absolute top-20 left-20 w-96 h-96 bg-[#08B4A6]/10 rounded-full blur-3xl"
+                className="absolute top-20 left-20 w-96 h-96 bg-[#0194FC]/10 rounded-full blur-3xl"
             />
             <motion.div
                 animate={{

@@ -8,7 +8,7 @@ interface ActivityIconProps {
 const ActivityIcon: React.FC<ActivityIconProps> = ({ type }) => {
     switch (type) {
         case 'purchase':
-            return <FaCoins className="text-[#08B4A6]" />;
+            return <FaCoins className="text-[#0194FC]" />;
         case 'verification':
             return <FaUserCheck className="text-blue-500" />;
         case 'claim':

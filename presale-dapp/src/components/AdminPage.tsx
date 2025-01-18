@@ -163,14 +163,14 @@ const AdminPage: React.FC = () => {
 
     if (!isAuthenticated) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#08B4A6]/10 to-white">
+            <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#0194FC]/10 to-white">
                 <div className="relative w-full max-w-md">
                     {/* Background elements */}
-                    <div className="absolute -top-20 -left-20 w-72 h-72 bg-[#08B4A6]/10 rounded-full filter blur-3xl animate-pulse" />
-                    <div className="absolute -bottom-20 -right-20 w-72 h-72 bg-[#08B4A6]/10 rounded-full filter blur-3xl animate-pulse" />
+                    <div className="absolute -top-20 -left-20 w-72 h-72 bg-[#0194FC]/10 rounded-full filter blur-3xl animate-pulse" />
+                    <div className="absolute -bottom-20 -right-20 w-72 h-72 bg-[#0194FC]/10 rounded-full filter blur-3xl animate-pulse" />
                     
                     {/* Login container */}
-                    <div className="relative bg-white p-8 rounded-2xl shadow-xl border border-[#08B4A6]/20 mx-4">
+                    <div className="relative bg-white p-8 rounded-2xl shadow-xl border border-[#0194FC]/20 mx-4">
                         <div className="text-center mb-8">
                             <div className="flex justify-center mb-4">
                                 <img 
@@ -179,7 +179,7 @@ const AdminPage: React.FC = () => {
                                     className="h-16 w-auto" 
                                 />
                             </div>
-                            <h2 className="text-3xl font-bold bg-gradient-to-r from-[#08B4A6] to-[#079e92] bg-clip-text text-transparent">
+                            <h2 className="text-3xl font-bold bg-gradient-to-r from-[#0194FC] to-[#079e92] bg-clip-text text-transparent">
                                 Admin Login
                             </h2>
                             <p className="text-gray-600 mt-2">Enter your credentials to continue</p>
@@ -197,7 +197,7 @@ const AdminPage: React.FC = () => {
                                             type="text"
                                             required
                                             className="appearance-none block w-full px-4 py-3 bg-white border border-gray-300 rounded-lg 
-                                                     placeholder-gray-400 focus:outline-none focus:ring-[#08B4A6] focus:border-[#08B4A6]
+                                                     placeholder-gray-400 focus:outline-none focus:ring-[#0194FC] focus:border-[#0194FC]
                                                      transition-all duration-200"
                                             placeholder="Enter your username"
                                             value={username}
@@ -215,7 +215,7 @@ const AdminPage: React.FC = () => {
                                             type="password"
                                             required
                                             className="appearance-none block w-full px-4 py-3 bg-white border border-gray-300 rounded-lg 
-                                                     placeholder-gray-400 focus:outline-none focus:ring-[#08B4A6] focus:border-[#08B4A6]
+                                                     placeholder-gray-400 focus:outline-none focus:ring-[#0194FC] focus:border-[#0194FC]
                                                      transition-all duration-200"
                                             placeholder="Enter your password"
                                             value={password}
@@ -227,10 +227,10 @@ const AdminPage: React.FC = () => {
 
                             <button
                                 type="submit"
-                                style={{ backgroundColor: '#08B4A6' }}  // Add this line
+                                style={{ backgroundColor: '#0194FC' }}  // Add this line
                                 className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg
                                          text-sm font-semibold text-white hover:bg-[#079e92]
-                                         focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#08B4A6]
+                                         focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#0194FC]
                                          transition-all duration-200 transform hover:scale-[1.02] shadow-lg"
                             >
                                 Sign in to Dashboard
@@ -245,7 +245,7 @@ const AdminPage: React.FC = () => {
     if (loading) {
         return (
             <div className="min-h-screen flex items-center justify-center">
-                <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-[#08B4A6]"></div>
+                <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-[#0194FC]"></div>
             </div>
         );
     }
@@ -266,7 +266,7 @@ const AdminPage: React.FC = () => {
                         className="flex justify-between items-center mb-8"
                     >
                         <div>
-                            <h1 className="text-4xl font-bold bg-gradient-to-r from-[#08B4A6] to-[#079e92] bg-clip-text text-transparent">
+                            <h1 className="text-4xl font-bold bg-gradient-to-r from-[#0194FC] to-[#079e92] bg-clip-text text-transparent">
                                 Admin Dashboard
                             </h1>
                             <p className="text-gray-600 mt-1">Welcome back, Admin</p>
@@ -442,7 +442,7 @@ const StatsCard: React.FC<{ icon: React.ReactNode; title: string; value: string 
 
 const TokenStatsCard: React.FC<{ title: string; sold: number; price: number }> = ({ title, sold, price }) => (
     <div className="bg-white rounded-lg shadow-lg p-6">
-        <h3 className="text-lg font-semibold text-[#08B4A6] mb-4">{title}</h3>
+        <h3 className="text-lg font-semibold text-[#0194FC] mb-4">{title}</h3>
         <div className="space-y-2">
             <div className="flex justify-between">
                 <span className="text-gray-500">Sold</span>
