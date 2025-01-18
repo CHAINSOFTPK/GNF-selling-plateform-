@@ -549,11 +549,12 @@ const ReferralDashboard: React.FC = () => {
                         {/* Add Claimable Tokens Section */}
                         <div className="mt-8 bg-[#09185E] rounded-xl p-6 shadow-md border-2 border-white/20 backdrop-blur-sm text-white">
                             <h2 className="text-xl font-bold mb-4">Claimable Tokens</h2>
-                            <div className="grid gap-4">
+                            <div className="grid gap-4" style={{ backgroundColor: '#030341' }}>
                                 {claimableTokens.map((token) => (
                                     <div 
                                         key={token.purchaseId} 
-                                        className="p-6 border rounded-lg bg-white shadow-sm hover:shadow-md transition-shadow"
+                                        className="p-6 border rounded-lg shadow-sm hover:shadow-md transition-shadow"
+                                        style={{ backgroundColor: '#030341' }}
                                     >
                                         <div className="flex justify-between items-center">
                                             <div>
