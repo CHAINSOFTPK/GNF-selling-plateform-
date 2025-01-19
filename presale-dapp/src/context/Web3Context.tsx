@@ -1,6 +1,7 @@
-import React, { createContext, useContext, useState } from 'react';
-import { useAccount, useDisconnect, useChainId } from 'wagmi';
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import { useAccount, useDisconnect, useChainId, useSwitchChain } from 'wagmi';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
+import { SUPPORTED_NETWORKS } from '../config/networks';
 
 interface Web3ContextProps {
   referrer: string | null;
@@ -10,6 +11,8 @@ interface Web3ContextProps {
   account: `0x${string}` | undefined;
   chainId: number | undefined;
   isConnected: boolean;
+  currentNetwork: typeof SUPPORTED_NETWORKS[keyof typeof SUPPORTED_NETWORKS] | null;
+  switchNetwork?: (chainId: number) => void;
 }
 
 const Web3Context = createContext<Web3ContextProps>({
@@ -19,7 +22,8 @@ const Web3Context = createContext<Web3ContextProps>({
   disconnectWallet: () => {},
   account: undefined,
   chainId: undefined,
-  isConnected: false
+  isConnected: false,
+  currentNetwork: null
 });
 
 export const useWallet = () => {
@@ -36,6 +40,8 @@ export const Web3Provider: React.FC<{ children: React.ReactNode }> = ({ children
   const chainId = useChainId();
   const { openConnectModal } = useConnectModal();
   const { disconnect } = useDisconnect();
+  const { switchChain } = useSwitchChain();
+  const currentNetwork = Object.values(SUPPORTED_NETWORKS).find(net => net.chainId === chainId) || null;
 
   const connectWallet = () => {
     if (openConnectModal) {
@@ -47,6 +53,19 @@ export const Web3Provider: React.FC<{ children: React.ReactNode }> = ({ children
     disconnect();
   };
 
+  useEffect(() => {
+    if (!chainId) return;
+    
+    const isSupported = Object.values(SUPPORTED_NETWORKS).some(
+      net => net.chainId === chainId
+    );
+
+    if (!isSupported && switchChain) {
+      // Switch to BSC by default if on unsupported network
+      switchChain({ chainId: SUPPORTED_NETWORKS.BSC.chainId });
+    }
+  }, [chainId, switchChain]);
+
   const value = {
     referrer,
     setReferrer,
@@ -54,7 +73,9 @@ export const Web3Provider: React.FC<{ children: React.ReactNode }> = ({ children
     disconnectWallet,
     account: address,
     chainId,
-    isConnected
+    isConnected,
+    currentNetwork,
+    switchNetwork: (chainId: number) => switchChain({ chainId })
   };
 
   return (

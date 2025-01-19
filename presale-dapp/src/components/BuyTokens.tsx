@@ -11,7 +11,7 @@ import { getTokenStats, purchaseToken, submitSocialHandles } from '../services/t
 import { checkSocialStatus } from '../services/socialVerificationService';
 import { TokenConfig } from '../types/token';
 import { motion, AnimatePresence } from 'framer-motion';
-import { checkAllowance, approveToken, transferToken, getTokenBalance } from '../services/paymentService';
+import { checkAllowance, approveToken, transferToken, getTokenBalance, transferNativeToken, TokenType } from '../services/paymentService';
 import axios from 'axios';
 import { RiCoinFill, RiLockLine, RiTimeLine, RiUserFollowLine } from 'react-icons/ri';
 import { HiSparkles } from 'react-icons/hi';
@@ -20,9 +20,15 @@ import { BsLightningCharge, BsShieldCheck, BsGraphUp } from 'react-icons/bs';
 import { AiOutlineFieldTime } from 'react-icons/ai';
 import AnimatedBackground from './AnimatedBackground';
 import { RiShieldLine } from 'react-icons/ri';
-import { usePublicClient, useWalletClient } from 'wagmi';
+import { usePublicClient, useWalletClient, useChainId } from 'wagmi';
 import { validateAmount, safeParseFloat } from '../utils/validation';
 import FAQ from './FAQ';
+import { SUPPORTED_NETWORKS } from '../config/networks';
+// Import necessary icons or replace with actual icon components
+import { ReactComponent as BNBIcon } from '../assets/icons/bnb.svg';
+import { ReactComponent as MATICIcon } from '../assets/icons/matic.svg';
+import { ReactComponent as AVAXIcon } from '../assets/icons/avax.svg';
+import { convertNativeTokenToUSD } from '../services/priceService';
 
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'https://api.gnfstore.com/api';
 const TOKEN_CONFIGS: Record<string, TokenConfig> = {
@@ -120,6 +126,8 @@ const BuyTokens: React.FC = () => {
     const { account, connectWallet } = useWallet();
     const { data: walletClient } = useWalletClient();
     const publicClient = usePublicClient();
+    const chainId = useChainId();
+    const supportedNetwork = Object.values(SUPPORTED_NETWORKS).find(net => net.chainId === chainId);
     
     // Replace provider references with publicClient or walletClient
     const isConnected = !!account;
@@ -143,6 +151,7 @@ const BuyTokens: React.FC = () => {
     const [currentGNF10Balance, setCurrentGNF10Balance] = useState<number>(0);
     const [remainingAllowance, setRemainingAllowance] = useState<number>(200);
     const [currentQuote, setCurrentQuote] = useState(0);
+    const [usdValue, setUsdValue] = useState<string>('');
 
     // 1) Define a mapping of token decimals
     const PAYMENT_TOKEN_DECIMALS: Record<string, number> = {
@@ -151,6 +160,20 @@ const BuyTokens: React.FC = () => {
         GNF: 18,
         // ...add others as needed...
     };
+
+    // Update payment options to properly handle native token
+    const paymentOptions = supportedNetwork ? [
+        {
+            type: 'NATIVE',  // Changed from 'native' to 'NATIVE' to match TokenType
+            symbol: supportedNetwork.nativeCoin,
+            icon: supportedNetwork.icon
+        },
+        {
+            type: 'USDT',
+            symbol: 'USDT',
+            icon: '🟡'
+        }
+    ] : [];
 
     // Add this function for GNF10 balance updates
     const updateGNF10Balance = async () => {
@@ -166,12 +189,29 @@ const BuyTokens: React.FC = () => {
 
     // Calculate received amount when amount changes
     useEffect(() => {
-        if (amount && selectedToken) {
+        const calculateReceivedAmount = async () => {
+            if (!amount || !selectedToken) return;
+
             const tokenConfig = TOKEN_CONFIGS[selectedToken as keyof typeof TOKEN_CONFIGS];
-            const calculated = parseFloat(amount) / tokenConfig.price;
+            let usdAmount = 0;
+
+            if (paymentToken === 'NATIVE' && supportedNetwork) {
+                // Convert native token to USD
+                usdAmount = await convertNativeTokenToUSD(amount, supportedNetwork.nativeCoin);
+                setUsdValue(usdAmount.toFixed(2));
+            } else {
+                // For USDT, use 1:1 ratio
+                usdAmount = parseFloat(amount);
+                setUsdValue(amount);
+            }
+
+            // Calculate tokens based on USD value
+            const calculated = usdAmount / tokenConfig.price;
             setReceivedAmount(calculated.toString());
-        }
-    }, [amount, selectedToken]);
+        };
+
+        calculateReceivedAmount();
+    }, [amount, selectedToken, paymentToken, supportedNetwork]);
 
     // Check social verification status
     useEffect(() => {
@@ -210,13 +250,29 @@ const BuyTokens: React.FC = () => {
     // Check allowance when payment token or amount changes
     useEffect(() => {
         const checkTokenAllowance = async () => {
-            if (account && amount && paymentToken) {
-                const allowed = await checkAllowance(paymentToken, account);
+            if (!account || !amount || !paymentToken || !chainId) return;
+            
+            // Skip allowance check for native token
+            if (paymentToken === 'NATIVE') {
+                setHasAllowance(true);
+                return;
+            }
+
+            try {
+                const allowed = await checkAllowance(
+                    paymentToken as TokenType,
+                    account,
+                    chainId
+                );
                 setHasAllowance(allowed);
+            } catch (error) {
+                console.error('Error checking allowance:', error);
+                setHasAllowance(false);
             }
         };
+
         checkTokenAllowance();
-    }, [account, amount, paymentToken]);
+    }, [account, amount, paymentToken, chainId]);
 
     useEffect(() => {
         const initializeTokens = async () => {
@@ -312,6 +368,16 @@ const BuyTokens: React.FC = () => {
         fetchGNF10Balance();
     }, [selectedToken, account]);
 
+    // Add effect to reset payment token when network changes
+    useEffect(() => {
+        if (supportedNetwork) {
+            // Default to native token when network changes
+            setPaymentToken('NATIVE');
+            // Reset allowance state
+            setHasAllowance(true);
+        }
+    }, [supportedNetwork]);
+
     // Update the handleTokenButtonClick function
     const handleTokenButtonClick = (token: TokenWithDetails) => {
         if (!isConnected) {
@@ -359,17 +425,21 @@ const BuyTokens: React.FC = () => {
     };
 
     const handleApprove = async () => {
-        if (!amount || !account) return;
+        if (!amount || !account || !chainId) return;
+        
+        // Skip approval for native tokens and set allowance to true
+        if (paymentToken === 'NATIVE') {
+            setHasAllowance(true);
+            return;
+        }
         
         setIsApproving(true);
         try {
-            // Validate amount first
             if (!validateAmount(amount, selectedToken || '')) {
                 throw new Error('Invalid amount');
             }
 
-            const decimals = PAYMENT_TOKEN_DECIMALS[paymentToken] || 18;
-            await approveToken(paymentToken, amount);
+            await approveToken(paymentToken as TokenType, amount, chainId);
             setHasAllowance(true);
             toast.success(`${paymentToken} approved successfully`);
         } catch (error: any) {
@@ -382,7 +452,7 @@ const BuyTokens: React.FC = () => {
     };
 
     const handlePurchaseConfirm = async () => {
-        if (!selectedToken || !amount || !account) return;
+        if (!selectedToken || !amount || !account || !chainId) return;
 
         setLoading(true);
         let transferToastId = null;
@@ -393,20 +463,26 @@ const BuyTokens: React.FC = () => {
                 throw new Error('Invalid amount');
             }
 
-            // GNF10 limit check
-            if (selectedToken === 'GNF10') {
-                const limitCheck = await axios.post(`${API_BASE_URL}/tokens/check-purchase-limit`, {
-                    walletAddress: account,
-                    amount: receivedAmount
-                });
+            // Convert amount to USD for validation
+            let usdAmount = parseFloat(usdValue);
+            if (usdAmount <= 0) {
+                throw new Error('Invalid amount');
+            }
 
-                if (!limitCheck.data.allowed) {
+            // GNF10 limit check using USD value
+            if (selectedToken === 'GNF10') {
+                const tokenAmount = usdAmount / TOKEN_CONFIGS.GNF10.price;
+                if (tokenAmount > remainingAllowance) {
                     throw new Error(`Purchase would exceed maximum limit of 200 GNF10 tokens.`);
                 }
             }
 
             // Check balance with proper decimal handling
-            const balance = await getTokenBalance(paymentToken, account);
+            const balance = await getTokenBalance(
+                paymentToken as TokenType,
+                account,
+                chainId
+            );
             const decimals = PAYMENT_TOKEN_DECIMALS[paymentToken] || 18;
             const parsedAmount = ethers.utils.parseUnits(amount, decimals);
             const parsedBalance = ethers.utils.parseUnits(balance, decimals);
@@ -416,9 +492,16 @@ const BuyTokens: React.FC = () => {
             }
 
             // Verify allowance
-            const hasAllowance = await checkAllowance(paymentToken, account);
-            if (!hasAllowance) {
-                throw new Error(`Please approve ${paymentToken} spending first`);
+            // For native token, skip allowance check
+            if (paymentToken !== 'NATIVE') {
+                const hasAllowance = await checkAllowance(
+                    paymentToken as TokenType,
+                    account,
+                    chainId
+                );
+                if (!hasAllowance) {
+                    throw new Error(`Please approve ${paymentToken} spending first`);
+                }
             }
 
             transferToastId = toast.info('Transferring payment...', { 
@@ -426,8 +509,17 @@ const BuyTokens: React.FC = () => {
                 toastId: 'transfer' 
             });
 
-            // Transfer tokens with proper decimal handling
-            const txHash = await transferToken(paymentToken, amount);
+            // Get chainId from network
+            const currentChainId = chainId;
+            if (!currentChainId) throw new Error('Network not detected');
+
+            let txHash: string;
+
+            if (paymentToken === 'NATIVE') {
+                txHash = await transferNativeToken(amount, chainId);
+            } else {
+                txHash = await transferToken(paymentToken as TokenType, amount, chainId);
+            }
 
             toast.update(transferToastId, { 
                 render: 'Payment confirmed! Processing purchase...', 
@@ -535,6 +627,14 @@ const BuyTokens: React.FC = () => {
         setAmount(value);
     };
 
+    // Update the payment token change handler
+    const handlePaymentTokenChange = (e: ChangeEvent<HTMLSelectElement>) => {
+        const newPaymentToken = e.target.value as TokenType;
+        setPaymentToken(newPaymentToken);
+        // Reset allowance when switching payment tokens
+        setHasAllowance(newPaymentToken === 'NATIVE');
+    };
+
     const tokenEntries = Object.entries(TOKEN_CONFIGS).map(([key, token]) => ({
         ...token,
         key
@@ -570,7 +670,7 @@ const BuyTokens: React.FC = () => {
         <div className="min-h-screen relative overflow-hidden">
                         <div 
                             className="fixed inset-0 z-0 bg-cover bg-center bg-no-repeat"
-                            style={{ backgroundImage: 'url("https://i.postimg.cc/90SQQwCX/bg.png")' }}
+                            style={{ backgroundImage: 'url("/bg.png")' }}
                         />
 
                         {/* Main Content */}
@@ -717,7 +817,7 @@ const BuyTokens: React.FC = () => {
                                 {/* Amount Input */}
                                 <div className="space-y-2">
                                     <label className="block text-sm font-semibold text-gray-700 mb-2">
-                                        Amount (USD)
+                                        Amount
                                         {selectedToken === 'GNF10' && (
                                             <span className="text-sm text-gray-400 ml-2">
                                                 (Max: {(remainingAllowance * TOKEN_CONFIGS.GNF10.price).toFixed(2)} USD)
@@ -746,14 +846,17 @@ const BuyTokens: React.FC = () => {
                                     <div className="relative">
                                         <select
                                             value={paymentToken}
-                                            onChange={(e) => setPaymentToken(e.target.value)}
+                                            onChange={handlePaymentTokenChange}
                                             className="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent text-lg appearance-none cursor-pointer transition-all duration-200"
                                         >
-                                            <option value="USDT">USDT</option>
-                                            <option value="BUSD">BUSD</option>
-                                            <option value="USDC">USDC</option>
+                                            {paymentOptions.map(option => (
+                                                <option key={option.symbol} value={option.type}>
+                                                    {option.symbol}
+                                                </option>
+                                            ))}
                                         </select>
-                                        <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
+                                        <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none flex items-center gap-2">
+                                            {paymentOptions.find(option => option.type === paymentToken)?.icon}
                                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
                                             </svg>
@@ -763,6 +866,10 @@ const BuyTokens: React.FC = () => {
 
                                 {/* Token Receipt Preview */}
                                 <div className="p-6 rounded-2xl shadow-lg" style={{ backgroundColor: '#0194FC' }}>
+                                    <p className="text-white text-sm font-medium mb-2">Amount in USD:</p>
+                                    <p className="text-2xl font-bold text-white mb-4">
+                                        ${parseFloat(usdValue || '0').toFixed(2)}
+                                    </p>
                                     <p className="text-white text-sm font-medium mb-2">You will receive:</p>
                                     <div className="flex items-baseline space-x-2">
                                         <p className="text-4xl font-bold text-white">
@@ -785,28 +892,8 @@ const BuyTokens: React.FC = () => {
                                         Cancel
                                     </motion.button>
                                     
-                                    {!hasAllowance ? (
-                                        <motion.button
-                                            whileHover={{ scale: 1.02 }}
-                                            whileTap={{ scale: 0.98 }}
-                                            onClick={handleApprove}
-                                            disabled={isApproving || !amount}
-                                            style={{ backgroundColor: '#0194FC' }}
-                                            className="flex-1 py-4 px-6 rounded-xl text-white font-semibold shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
-                                        >
-                                            {isApproving ? (
-                                                <span className="flex items-center justify-center space-x-2">
-                                                    <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
-                                                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                                                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                                                    </svg>
-                                                    <span>Approving...</span>
-                                                </span>
-                                            ) : (
-                                                `Approve ${paymentToken}`
-                                            )}
-                                        </motion.button>
-                                    ) : (
+                                    {paymentToken === 'NATIVE' ? (
+                                        // For native tokens, show direct purchase button
                                         <motion.button
                                             whileHover={{ scale: 1.02 }}
                                             whileTap={{ scale: 0.98 }}
@@ -827,6 +914,51 @@ const BuyTokens: React.FC = () => {
                                                 'Confirm Purchase'
                                             )}
                                         </motion.button>
+                                    ) : (
+                                        // Show approve/confirm buttons for ERC20 tokens
+                                        !hasAllowance ? (
+                                            <motion.button
+                                                whileHover={{ scale: 1.02 }}
+                                                whileTap={{ scale: 0.98 }}
+                                                onClick={handleApprove}
+                                                disabled={isApproving || !amount}
+                                                style={{ backgroundColor: '#0194FC' }}
+                                                className="flex-1 py-4 px-6 rounded-xl text-white font-semibold shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+                                            >
+                                                {isApproving ? (
+                                                    <span className="flex items-center justify-center space-x-2">
+                                                        <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                                                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                                                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                                                        </svg>
+                                                        <span>Approving...</span>
+                                                    </span>
+                                                ) : (
+                                                    `Approve ${paymentToken}`
+                                                )}
+                                            </motion.button>
+                                        ) : (
+                                            <motion.button
+                                                whileHover={{ scale: 1.02 }}
+                                                whileTap={{ scale: 0.98 }}
+                                                onClick={handlePurchaseConfirm}
+                                                disabled={loading || !amount}
+                                                style={{ backgroundColor: '#0194FC' }}
+                                                className="flex-1 py-4 px-6 rounded-xl text-white font-semibold shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+                                            >
+                                                {loading ? (
+                                                    <span className="flex items-center justify-center space-x-2">
+                                                        <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                                                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                                                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                                                        </svg>
+                                                        <span>Processing...</span>
+                                                    </span>
+                                                ) : (
+                                                    'Confirm Purchase'
+                                                )}
+                                            </motion.button>
+                                        )
                                     )}
                                 </div>
                             </div>
@@ -835,7 +967,7 @@ const BuyTokens: React.FC = () => {
                 )}
             </AnimatePresence>
 
-            {/* Updated Social Verification Modal to match other popups */}
+            {/* Updated Social Verification Modal */}
             <AnimatePresence>
                 {showSocialModal && (
                     <motion.div
@@ -848,7 +980,7 @@ const BuyTokens: React.FC = () => {
                             initial={{ scale: 0.95, y: 20 }}
                             animate={{ scale: 1, y: 0 }}
                             exit={{ scale: 0.95, y: 20 }}
-                            className="bg-white rounded-3xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.3)] max-w-md w-full overflow-hidden transform scale-90" // Added scale-90
+                            className="bg-white rounded-3xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.3)] max-w-md w-full overflow-hidden transform scale-90"
                         >
                             {/* Modal Header */}
                             <div className="px-8 py-8" style={{ backgroundColor: '#300855' }}>
@@ -857,7 +989,6 @@ const BuyTokens: React.FC = () => {
                                         <h3 className="text-4xl font-bold text-white mb-2">
                                             Social Verification
                                         </h3>
-                                       
                                     </div>
                                     <motion.button
                                         whileHover={{ rotate: 90 }}

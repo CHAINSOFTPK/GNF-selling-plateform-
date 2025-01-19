@@ -57,10 +57,10 @@ const ConnectWallet: React.FC = () => {
               whileTap={{ scale: 0.95 }}
               onClick={openChainModal}
               className="flex items-center space-x-2 text-white text-sm font-semibold 
-                         py-2 px-4 rounded-xl shadow-lg hover:shadow-xl 
-                         transition-all duration-200 bg-red-500"
+                   py-2 px-4 rounded-xl shadow-lg hover:shadow-xl 
+                   transition-all duration-200 bg-blue-500"
             >
-              Switch to Ethereum
+              Switch Network
             </motion.button>
           );
         }

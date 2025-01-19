@@ -1,6 +1,7 @@
 import { API_BASE_URL } from '../config/constants';
 import axios from 'axios';
 import { ethers } from 'ethers';
+import { SUPPORTED_NETWORKS } from '../config/networks';
 
 export interface TokenStats {
     symbol: string;
@@ -32,7 +33,7 @@ export const purchaseToken = async (
     tokenSymbol: string,
     amount: number,
     paymentTxHash: string,
-    paymentToken: string // Add this parameter
+    paymentToken: string // Now includes 'NATIVE'
 ): Promise<{ success: boolean; message?: string; data?: any }> => {
     try {
         // Convert the USD amount to payment token amount considering decimals
@@ -48,6 +49,7 @@ export const purchaseToken = async (
             paymentTxHash,
             referrer: null,
             bonusAmount: amount * 0.02 // 2% bonus
+            // ...other data...
         });
 
         if (response.data.success) {

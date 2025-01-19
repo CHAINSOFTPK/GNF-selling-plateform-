@@ -12,7 +12,7 @@ import Admin from "./components/AdminPage";
 
 import { getDefaultWallets, RainbowKitProvider, darkTheme } from '@rainbow-me/rainbowkit';
 import { WagmiConfig } from 'wagmi';
-import { mainnet } from 'viem/chains';
+import { mainnet, polygon, avalanche, bsc } from 'wagmi/chains';
 import { createConfig, http } from 'wagmi';
 import { getDefaultConfig } from '@rainbow-me/rainbowkit';
 import '@rainbow-me/rainbowkit/styles.css';
@@ -55,6 +55,39 @@ const shopeliaTestnet = {
   testnet: true,
 } as const;
 
+// Define BSC Chain
+const bscChain = {
+  ...bsc,
+  rpcUrls: {
+    public: { http: ['https://bsc-dataseed.binance.org'] },
+    default: { http: ['https://bsc-dataseed.binance.org'] },
+  },
+  iconUrl: '/bnb.png', // Add icon
+  testnet: false
+};
+
+// Define Polygon Chain
+const polygonChain = {
+  ...polygon,
+  rpcUrls: {
+    public: { http: ['https://polygon-rpc.com'] },
+    default: { http: ['https://polygon-rpc.com'] },
+  },
+  iconUrl: '/polygon.png', // Add icon
+  testnet: false
+};
+
+// Define Avalanche Chain
+const avalancheChain = {
+  ...avalanche,
+  rpcUrls: {
+    public: { http: ['https://api.avax.network/ext/bc/C/rpc'] },
+    default: { http: ['https://api.avax.network/ext/bc/C/rpc'] },
+  },
+  iconUrl: '/avax.png', // Add icon
+  testnet: false
+};
+
 // Add this check at the start of your component
 const projectId = process.env.REACT_APP_WALLET_CONNECT_PROJECT_ID;
 if (!projectId) {
@@ -63,9 +96,17 @@ if (!projectId) {
 
 const config = getDefaultConfig({
   appName: 'GNF Presale',
-  projectId, // Use the projectId directly
-  chains: [mainnet, gnfChain],
+  projectId,
+  chains: [bscChain, polygonChain, avalancheChain],
+  transports: {
+    [bscChain.id]: http(),
+    [polygonChain.id]: http(),
+    [avalancheChain.id]: http(),
+  },
 });
+
+// Add this to set initial chain
+const initialChainId = bscChain.id;
 
 const queryClient = new QueryClient();
 
@@ -74,6 +115,7 @@ const App: React.FC = () => {
         <QueryClientProvider client={queryClient}>
             <WagmiConfig config={config}>
                 <RainbowKitProvider
+                    initialChain={initialChainId}  // Set initial chain here
                     theme={darkTheme({
                         accentColor: '#0194FC',
                         borderRadius: 'medium'

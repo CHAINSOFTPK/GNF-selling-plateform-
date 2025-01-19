@@ -4,9 +4,12 @@ import { toast } from 'react-toastify';
 import { FaChartLine, FaBars, FaTimes } from 'react-icons/fa';
 import ConnectWallet from './ConnectWallet';
 import { useWallet } from '../context/Web3Context';
+import { useTokenBalance } from '../hooks/useTokenBalance';
+import { formatNumber } from '../utils/formatters';
 
 const Header: React.FC = () => {
-    const { account, connectWallet } = useWallet();
+    const { account, connectWallet, currentNetwork } = useWallet();
+    const { balance, tokenSymbol } = useTokenBalance();
     const navigate = useNavigate();
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -76,6 +79,12 @@ const Header: React.FC = () => {
                                 <span>Dashboard</span>
                             </button>
                             <div className="h-6 w-px bg-gray-200"></div>
+                            <button className="text-xs text-white bg-blue-600 px-3 py-1 rounded-md">
+                                {formatNumber(balance)} {tokenSymbol}
+                            </button>
+                            <button className="text-xs text-white bg-blue-600 px-3 py-1 rounded-md">
+                                 {currentNetwork?.name || 'Unknown'}
+                            </button>
                         </>
                     )}
                     <div className="pointer-events-auto">
