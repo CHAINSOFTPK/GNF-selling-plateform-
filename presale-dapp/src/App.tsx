@@ -9,6 +9,7 @@ import ReferralDashboard from './components/ReferralDashboard';
 import { Web3Provider } from './context/Web3Context'; // Changed from WalletProvider
 import Footer from './components/Footer';
 import Admin from "./components/AdminPage";
+import Bot from "./components/TelegramBuy";
 
 import { getDefaultWallets, RainbowKitProvider, darkTheme } from '@rainbow-me/rainbowkit';
 import { WagmiConfig } from 'wagmi';
@@ -135,11 +136,12 @@ const App: React.FC = () => {
                                     <Web3Provider>
                                         <div className="min-h-screen bg-gray-100 flex flex-col">
                                             <Header />
-                                            <main className="flex-grow container mx-auto px-0 sm:px-4 py-4 sm:py-8">
+                                            <main className="flex-grow container mx-auto px-0 sm:px-4 py-4 sm:py-8 pt-[50px]">
                                                 <Routes>
                                                     <Route path="/" element={<BuyTokens />} />
                                                     <Route path="/referrals" element={<ReferralDashboard />} />
                                                     <Route path="/:walletAddress" element={<BuyTokens />} />
+                                                    <Route path="/bot" element={<Bot />} />
                                                 </Routes>
                                             </main>
                                             <Footer />
@@ -161,6 +163,15 @@ const App: React.FC = () => {
                                                 limit={3}
                                             />
                                         </div>
+                                    </Web3Provider>
+                                }
+                            />
+                            <Route
+                                path="/bot"
+                                element={
+                                    <Web3Provider>
+                                        {/* Remove parent header and footer for the /bot route */}
+                                        <Bot />
                                     </Web3Provider>
                                 }
                             />

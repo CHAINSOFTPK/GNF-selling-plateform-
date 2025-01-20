@@ -1,13 +1,34 @@
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { FaChevronDown } from 'react-icons/fa';
 
 interface FAQItem {
     question: string;
     answer: string;
 }
 
-const faqs: FAQItem[] = [
+const FaqItem: React.FC<{ faq: FAQItem }> = ({ faq }) => {
+    const [isOpen, setIsOpen] = useState(false);
+
+    return (
+        <div className="mb-4">
+            <button
+                className="w-full text-left p-4 rounded-lg bg-white/10 hover:bg-white/20 transition-all"
+                onClick={() => setIsOpen(!isOpen)}
+            >
+                <div className="flex justify-between items-center">
+                    <h3 className="text-lg font-semibold">{faq.question}</h3>
+                    <span className="text-2xl">{isOpen ? '−' : '+'}</span>
+                </div>
+            </button>
+            {isOpen && (
+                <div className="p-4 bg-white/5 rounded-b-lg mt-1">
+                    <p className="text-gray-200">{faq.answer}</p>
+                </div>
+            )}
+        </div>
+    );
+};
+
+const faqData: FAQItem[] = [
     {
         question: "What is Global Network Foundation?",
         answer: "Global Network Foundation is an innovative blockchain ecosystem that features its own blockchain called Global Network. The ecosystem includes various Web3 solutions including crypto wallets, P2P platform, DEX (decentralized exchange), and Web3 communication applications, all powered by GNF, our native token."
@@ -50,57 +71,19 @@ const faqs: FAQItem[] = [
     }
 ];
 
-const FAQ: React.FC = () => {
-    const [activeIndex, setActiveIndex] = useState<number | null>(null);
-
+const Faqs: React.FC = () => {
     return (
-        <div className="min-h-screen bg-gray-900 pt-[50px] px-4">
-            <h2 className="text-3xl font-bold text-blue-200 text-center mb-8 drop-shadow-xl">
-                Frequently Asked Questions
-            </h2>
-            <div className="max-w-4xl mx-auto space-y-4">
-                {faqs.map((faq, index) => (
-                    <motion.div
-                        key={index}
-                        initial={false}
-                        className="rounded-xl overflow-hidden bg-white/10 backdrop-blur-lg border border-white/10"
-                    >
-                        <motion.button
-                            onClick={() => setActiveIndex(activeIndex === index ? null : index)}
-                            className="w-full px-6 py-5 flex items-center justify-between text-left"
-                            whileHover={{ backgroundColor: 'rgba(255, 255, 255, 0.05)' }}
-                        >
-                            <span className="text-black font-semibold text-lg">{faq.question}</span>
-                            <motion.div
-                                animate={{ rotate: activeIndex === index ? 180 : 0 }}
-                                transition={{ duration: 0.3 }}
-                            >
-                                <FaChevronDown className="text-black/70" />
-                            </motion.div>
-                        </motion.button>
-                        <AnimatePresence>
-                            {activeIndex === index && (
-                                <motion.div
-                                    initial={{ height: 0, opacity: 0 }}
-                                    animate={{ height: "auto", opacity: 1 }}
-                                    exit={{ height: 0, opacity: 0 }}
-                                    transition={{ duration: 0.3 }}
-                                    className="overflow-hidden"
-                                >
-                                    <div className="px-6 py-5 border-t border-white/10">
-                                        <p className="text-white/80 leading-relaxed">
-                                            {faq.answer}
-                                        </p>
-                                    </div>
-                                </motion.div>
-                            )}
-                        </AnimatePresence>
-                    </motion.div>
-                ))}
+        <div className="min-h-screen text-white py-16 px-4 sm:px-6 lg:px-8" 
+            style={{ background: 'linear-gradient(135deg, #2F0D5B 0%, #0194FC 100%)' }}>
+            <div className="max-w-3xl mx-auto">
+                <div className="space-y-4">
+                    {faqData.map((faq, index) => (
+                        <FaqItem key={index} faq={faq} />
+                    ))}
+                </div>
             </div>
         </div>
     );
 };
 
-export default FAQ;
-export type { FAQItem };
+export default Faqs;
