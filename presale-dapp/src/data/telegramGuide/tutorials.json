@@ -1,0 +1,476 @@
+{
+  "navigation": {
+    "en": {
+      "videos": "Videos",
+      "docs": "Documentation",
+      "guide": "Guide",
+      "dashboard": "Dashboard",
+      "buy": "Buy",
+      "noVideos": "No videos available in English"
+    },
+    "ru": {
+      "videos": "Видео",
+      "docs": "Документация",
+      "guide": "Руководство",
+      "dashboard": "Панель",
+      "buy": "Купить",
+      "noVideos": "Нет доступных видео на русском"
+    },
+    "tr": {
+      "videos": "Videolar",
+      "docs": "Dökümanlar",
+      "guide": "Rehber",
+      "dashboard": "Panel",
+      "buy": "Satın Al",
+      "noVideos": "Türkçe video bulunmamaktadır"
+    },
+    "uz": {
+      "videos": "Videolar",
+      "docs": "Hujjatlar",
+      "guide": "Qo'llanma",
+      "dashboard": "Boshqaruv",
+      "buy": "Sotib olish",
+      "noVideos": "O'zbek tilida videolar mavjud emas"
+    }
+  },
+  "videos": {
+    "en": [
+      {
+        "id": "en-1",
+        "title": "Buy GNF with MATIC",
+        "description": "Complete guide to buying GNF tokens using MATIC on Polygon network",
+        "thumbnail": "https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg",
+        "youtubeUrl": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "duration": "3:45"
+      },
+      {
+        "id": "en-2",
+        "title": "Buy GNF with BNB",
+        "description": "Complete guide to buying GNF tokens using BNB on BSC network",
+        "thumbnail": "https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg",
+        "youtubeUrl": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "duration": "4:20"
+      },
+      {
+        "id": "en-3",
+        "title": "Buy GNF with AVAX",
+        "description": "Complete guide to buying GNF tokens using AVAX on Avalanche network",
+        "thumbnail": "https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg",
+        "youtubeUrl": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "duration": "3:55"
+      },
+      {
+        "id": "en-4",
+        "title": "Dashboard Tutorial",
+        "description": "Learn how to use the GNF Dashboard features",
+        "thumbnail": "https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg",
+        "youtubeUrl": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "duration": "5:30"
+      }
+    ],
+    "ru": [
+      {
+        "id": "ru-1",
+        "title": "Покупка GNF через MATIC",
+        "description": "Руководство по покупке токенов GNF с использованием MATIC в сети Polygon",
+        "thumbnail": "https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg",
+        "youtubeUrl": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "duration": "3:45"
+      },
+      {
+        "id": "ru-2",
+        "title": "Покупка GNF через BNB",
+        "description": "Руководство по покупке токенов GNF с использованием BNB в сети BSC",
+        "thumbnail": "https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg",
+        "youtubeUrl": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "duration": "4:20"
+      },
+      {
+        "id": "ru-3",
+        "title": "Покупка GNF через AVAX",
+        "description": "Руководство по покупке токенов GNF с использованием AVAX в сети Avalanche",
+        "thumbnail": "https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg",
+        "youtubeUrl": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "duration": "3:55"
+      },
+      {
+        "id": "ru-4",
+        "title": "Обзор Панели Управления",
+        "description": "Изучите функции и возможности панели управления GNF",
+        "thumbnail": "https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg",
+        "youtubeUrl": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "duration": "5:30"
+      }
+    ],
+    "tr": [
+      {
+        "id": "tr-1",
+        "title": "MATIC ile GNF Nasıl Alınır",
+        "description": "Polygon ağında MATIC kullanarak GNF token alma rehberi",
+        "thumbnail": "https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg",
+        "youtubeUrl": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "duration": "3:45"
+      },
+      {
+        "id": "tr-2",
+        "title": "BNB ile GNF Nasıl Alınır",
+        "description": "BSC ağında BNB kullanarak GNF token alma rehberi",
+        "thumbnail": "https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg",
+        "youtubeUrl": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "duration": "4:20"
+      },
+      {
+        "id": "tr-3",
+        "title": "AVAX ile GNF Nasıl Alınır",
+        "description": "Avalanche ağında AVAX kullanarak GNF token alma rehberi",
+        "thumbnail": "https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg",
+        "youtubeUrl": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "duration": "3:55"
+      },
+      {
+        "id": "tr-4",
+        "title": "Panel Kullanım Rehberi",
+        "description": "GNF kontrol panelinin detaylı kullanım rehberi",
+        "thumbnail": "https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg",
+        "youtubeUrl": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "duration": "5:30"
+      }
+    ],
+    "uz": [
+      {
+        "id": "uz-1",
+        "title": "MATIC orqali GNF sotib olish",
+        "description": "Polygon tarmog'ida MATIC orqali GNF tokenlarini sotib olish bo'yicha qo'llanma",
+        "thumbnail": "https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg",
+        "youtubeUrl": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "duration": "3:45"
+      },
+      {
+        "id": "uz-2",
+        "title": "BNB orqali GNF sotib olish",
+        "description": "BSC tarmog'ida BNB orqali GNF tokenlarini sotib olish bo'yicha qo'llanma",
+        "thumbnail": "https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg",
+        "youtubeUrl": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "duration": "4:20"
+      },
+      {
+        "id": "uz-3",
+        "title": "AVAX orqali GNF sotib olish",
+        "description": "Avalanche tarmog'ida AVAX orqali GNF tokenlarini sotib olish bo'yicha qo'llanma",
+        "thumbnail": "https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg",
+        "youtubeUrl": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "duration": "3:55"
+      },
+      {
+        "id": "uz-4",
+        "title": "Boshqaruv paneli qo'llanmasi",
+        "description": "GNF boshqaruv panelidan foydalanish bo'yicha to'liq qo'llanma",
+        "thumbnail": "https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg",
+        "youtubeUrl": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "duration": "5:30"
+      }
+    ]
+  },
+  "documentation": {
+    "en": [
+      {
+        "type": "guide",
+        "title": "How to Buy GNF Tokens",
+        "content": [
+          "Step 1: Connect Your Wallet",
+          "• Click 'Connect Wallet' at the top of the page",
+          "• Select your wallet provider (MetaMask, WalletConnect, etc.)",
+          
+          "Step 2: Choose Network & Payment Method",
+          "• Select your preferred network (Polygon, BSC, or Avalanche)",
+          "• Choose payment token (MATIC, BNB, AVAX, or USDT)",
+          
+          "Step 3: Select Token Tier",
+          "• Tier 1 (GNF): Requires social verification, max 200 tokens",
+          "• Tier 2 (GNF): 1-year vesting period",
+          "• Tier 3 (GNF): 3-year vesting period",
+          
+          "Step 4: Purchase Process",
+          "• Enter the amount you want to spend",
+          "• Complete social verification if choosing Tier 1",
+          "• Approve token spending (for USDT)",
+          "• Confirm the transaction in your wallet",
+          
+          "Step 5: Post-Purchase",
+          "• Visit Dashboard to view your purchased tokens",
+          "• Track vesting schedule and claim available tokens"
+        ]
+      },
+      {
+        "type": "faq",
+        "content": [
+          {
+            "question": "What is GlobalNetwork?",
+            "answer": "GlobalNetwork is a revolutionary blockchain platform combining PoA consensus with hybrid models, offering enterprise-grade scalability and security while maintaining decentralization. It's EVM-compatible and designed for both DeFi and enterprise solutions."
+          },
+          {
+            "question": "What are GNF token use cases?",
+            "answer": "GNF powers the GlobalNetwork ecosystem through: network fees, staking for security, governance participation, and access to premium platform features."
+          },
+          {
+            "question": "Why are there different tiers?",
+            "answer": "Different tiers cater to various investor needs: Tier 1 for community members (verified), Tier 2 for medium-term holders, and Tier 3 for long-term institutional investors."
+          },
+          {
+            "question": "Why is there a vesting period?",
+            "answer": "Vesting periods ensure sustainable token distribution and project stability by preventing immediate selling pressure and encouraging long-term holding."
+          },
+          {
+            "question": "Will staking be available?",
+            "answer": "Yes! Staking will be introduced after Round One sale completion, allowing token holders to earn rewards while securing the network."
+          },
+          {
+            "question": "How does social verification work?",
+            "answer": "Social verification for Tier 1 requires connecting your Twitter and Discord accounts to verify community participation. This ensures fair distribution to active community members."
+          },
+          {
+            "question": "Can I participate in multiple tiers?",
+            "answer": "Yes, you can participate in multiple tiers to diversify your investment strategy and benefit from different vesting schedules."
+          },
+          {
+            "question": "What happens after vesting?",
+            "answer": "After vesting periods end, tokens become fully unlocked and can be claimed through the dashboard for staking, governance, or other uses."
+          },
+          {
+            "question": "How is the network secured?",
+            "answer": "GlobalNetwork uses Proof of Authority (PoA) with hybrid consensus mechanisms, ensuring high security and efficient transaction processing."
+          },
+          {
+            "question": "What are the token prices?",
+            "answer": "Tier 1: $0.2/token, Tier 2: $0.6/token, Tier 3: $0.15/token. Different prices reflect vesting periods and allocation sizes."
+          }
+        ]
+      }
+    ],
+    "ru": [
+      {
+        "type": "guide",
+        "title": "Как купить токены GNF",
+        "content": [
+          "Шаг 1: Подключите кошелек",
+          "• Нажмите 'Подключить кошелек' вверху страницы",
+          "• Выберите провайдера кошелька (MetaMask, WalletConnect и т.д.)",
+          
+          "Шаг 2: Выберите сеть и способ оплаты",
+          "• Выберите предпочитаемую сеть (Polygon, BSC или Avalanche)",
+          "• Выберите токен для оплаты (MATIC, BNB, AVAX или USDT)",
+          
+          "Шаг 3: Выберите уровень токенов",
+          "• Уровень 1 (GNF): Требуется социальная верификация, максимум 200 токенов",
+          "• Уровень 2 (GNF): Период вестинга 1 год",
+          "• Уровень 3 (GNF): Период вестинга 3 года",
+          
+          "Шаг 4: Процесс покупки",
+          "• Введите сумму, которую хотите потратить",
+          "• Пройдите социальную верификацию для Уровня 1",
+          "• Подтвердите использование токенов (для USDT)",
+          "• Подтвердите транзакцию в кошельке",
+          
+          "Шаг 5: После покупки",
+          "• Перейдите в Панель управления для просмотра купленных токенов",
+          "• Отслеживайте график вестинга и получайте доступные токены"
+        ]
+      },
+      {
+        "type": "faq",
+        "content": [
+          {
+            "question": "Что такое GlobalNetwork?",
+            "answer": "GlobalNetwork - это революционная блокчейн-платформа, сочетающая консенсус PoA с гибридными моделями, обеспечивая масштабируемость корпоративного уровня при сохранении децентрализации."
+          },
+          {
+            "question": "Как используется токен GNF?",
+            "answer": "GNF используется для: оплаты комиссий сети, стейкинга, участия в управлении и доступа к премиум-функциям платформы."
+          },
+          {
+            "question": "Почему существуют разные уровни?",
+            "answer": "Разные уровни удовлетворяют различные потребности инвесторов: Уровень 1 для членов сообщества, Уровень 2 для среднесрочных держателей, Уровень 3 для институциональных инвесторов."
+          },
+          {
+            "question": "Почему есть период вестинга?",
+            "answer": "Периоды вестинга обеспечивают устойчивое распределение токенов и стабильность проекта, предотвращая давление продаж и поощряя долгосрочное хранение."
+          },
+          {
+            "question": "Будет ли доступен стейкинг?",
+            "answer": "Да! Стейкинг будет запущен после завершения первого раунда продаж, позволяя держателям токенов получать награды."
+          },
+          {
+            "question": "Как работает социальная верификация?",
+            "answer": "Социальная верификация для Уровня 1 требует подключения аккаунтов Twitter и Discord для подтверждения участия в сообществе. Это обеспечивает справедливое распределение среди активных участников."
+          },
+          {
+            "question": "Можно ли участвовать в нескольких уровнях?",
+            "answer": "Да, вы можете участвовать в нескольких уровнях для диверсификации инвестиционной стратегии и получения выгоды от разных графиков вестинга."
+          },
+          {
+            "question": "Что происходит после вестинга?",
+            "answer": "После окончания периодов вестинга токены становятся полностью разблокированными и могут быть получены через панель управления для стейкинга, управления или других целей."
+          },
+          {
+            "question": "Как обеспечивается безопасность сети?",
+            "answer": "GlobalNetwork использует механизм консенсуса Proof of Authority (PoA) с гибридными моделями, обеспечивая высокую безопасность и эффективную обработку транзакций."
+          },
+          {
+            "question": "Какие цены на токены?",
+            "answer": "Уровень 1: $0.2/токен, Уровень 2: $0.6/токен, Уровень 3: $0.15/токен. Разные цены отражают периоды вестинга и размеры распределения."
+          }
+        ]
+      }
+    ],
+    "tr": [
+      {
+        "type": "guide",
+        "title": "GNF Token Nasıl Alınır",
+        "content": [
+          "Adım 1: Cüzdanınızı Bağlayın",
+          "• Sayfanın üst kısmındaki 'Cüzdan Bağla' butonuna tıklayın",
+          "• Cüzdan sağlayıcınızı seçin (MetaMask, WalletConnect, vb.)",
+          
+          "Adım 2: Ağ ve Ödeme Yöntemi Seçin",
+          "• Tercih ettiğiniz ağı seçin (Polygon, BSC veya Avalanche)",
+          "• Ödeme tokeni seçin (MATIC, BNB, AVAX veya USDT)",
+          
+          "Adım 3: Token Seviyesi Seçin",
+          "• Seviye 1 (GNF): Sosyal doğrulama gerekli, maksimum 200 token",
+          "• Seviye 2 (GNF): 1 yıl vesting süresi",
+          "• Seviye 3 (GNF): 3 yıl vesting süresi",
+          
+          "Adım 4: Satın Alma İşlemi",
+          "• Harcamak istediğiniz miktarı girin",
+          "• Seviye 1 için sosyal doğrulamayı tamamlayın",
+          "• Token harcama iznini onaylayın (USDT için)",
+          "• Cüzdanınızda işlemi onaylayın",
+          
+          "Adım 5: Satın Alma Sonrası",
+          "• Satın aldığınız tokenleri görmek için Panele gidin",
+          "• Vesting takvimini takip edin ve kullanılabilir tokenleri talep edin"
+        ]
+      },
+      {
+        "type": "faq",
+        "content": [
+          {
+            "question": "GlobalNetwork nedir?",
+            "answer": "GlobalNetwork, PoA konsensüsünü hibrit modellerle birleştiren, merkeziyetsizliği korurken kurumsal düzeyde ölçeklenebilirlik sunan devrim niteliğinde bir blokzincir platformudur."
+          },
+          {
+            "question": "GNF token ne için kullanılır?",
+            "answer": "GNF, ağ ücretleri, staking, yönetişime katılım ve premium platform özelliklerine erişim için kullanılır."
+          },
+          {
+            "question": "Neden farklı seviyeler var?",
+            "answer": "Farklı seviyeler farklı yatırımcı ihtiyaçlarına hitap eder: Seviye 1 topluluk üyeleri için, Seviye 2 orta vadeli yatırımcılar için, Seviye 3 kurumsal yatırımcılar için."
+          },
+          {
+            "question": "Neden vesting süresi var?",
+            "answer": "Vesting süreleri, sürdürülebilir token dağıtımını ve proje istikrarını sağlar, anlık satış baskısını önler ve uzun vadeli tutmayı teşvik eder."
+          },
+          {
+            "question": "Staking mevcut olacak mı?",
+            "answer": "Evet! Birinci tur satış tamamlandıktan sonra staking başlatılacak ve token sahipleri ödüller kazanabilecek."
+          },
+          {
+            "question": "Sosyal doğrulama nasıl çalışır?",
+            "answer": "Seviye 1 için sosyal doğrulama, topluluk katılımını doğrulamak için Twitter ve Discord hesaplarınızın bağlanmasını gerektirir. Bu, aktif topluluk üyelerine adil dağıtımı sağlar."
+          },
+          {
+            "question": "Birden fazla seviyeye katılabilir miyim?",
+            "answer": "Evet, yatırım stratejinizi çeşitlendirmek ve farklı vesting programlarından faydalanmak için birden fazla seviyeye katılabilirsiniz."
+          },
+          {
+            "question": "Vesting sonrasında ne olur?",
+            "answer": "Vesting süreleri sona erdiğinde, tokenlar tamamen açılır ve panel üzerinden staking, yönetişim veya diğer kullanımlar için talep edilebilir."
+          },
+          {
+            "question": "Ağ nasıl güvence altına alınıyor?",
+            "answer": "GlobalNetwork, yüksek güvenlik ve verimli işlem işlemeyi sağlayan hibrit konsensüs mekanizmalarıyla Proof of Authority (PoA) kullanır."
+          },
+          {
+            "question": "Token fiyatları nedir?",
+            "answer": "Seviye 1: $0.2/token, Seviye 2: $0.6/token, Seviye 3: $0.15/token. Farklı fiyatlar vesting süreleri ve tahsis büyüklüklerini yansıtır."
+          }
+        ]
+      }
+    ],
+    "uz": [
+      {
+        "type": "guide",
+        "title": "GNF Tokenlarini qanday sotib olish mumkin",
+        "content": [
+          "1-qadam: Hamyonni ulash",
+          "• Sahifa yuqorisidagi 'Hamyonni ulash' tugmasini bosing",
+          "• Hamyon provayderingizni tanlang (MetaMask, WalletConnect va boshqalar)",
+          
+          "2-qadam: Tarmoq va to'lov usulini tanlang",
+          "• O'zingiz xohlagan tarmoqni tanlang (Polygon, BSC yoki Avalanche)",
+          "• To'lov tokeni tanlang (MATIC, BNB, AVAX yoki USDT)",
+          
+          "3-qadam: Token darajasini tanlang",
+          "• 1-daraja (GNF): Ijtimoiy tasdiqlash kerak, maksimal 200 token",
+          "• 2-daraja (GNF): 1 yillik vesting davri",
+          "• 3-daraja (GNF): 3 yillik vesting davri",
+          
+          "4-qadam: Sotib olish jarayoni",
+          "• Sarflamoqchi bo'lgan miqdorni kiriting",
+          "• 1-daraja uchun ijtimoiy tasdiqlashni tugating",
+          "• Token sarflashga ruxsat bering (USDT uchun)",
+          "• Hamyoningizda tranzaksiyani tasdiqlang",
+          
+          "5-qadam: Sotib olishdan so'ng",
+          "• Sotib olingan tokenlarni ko'rish uchun Panelga o'ting",
+          "• Vesting jadvalini kuzating va mavjud tokenlarni olishingiz mumkin"
+        ]
+      },
+      {
+        "type": "faq",
+        "content": [
+          {
+            "question": "GlobalNetwork nima?",
+            "answer": "GlobalNetwork - bu PoA konsensusini gibrid modellar bilan birlashtirgan, markazsizlashtirishni saqlab qolgan holda korporativ darajadagi masshtablanishni ta'minlovchi inqilobiy blokcheyn platformasi."
+          },
+          {
+            "question": "GNF token nima uchun ishlatiladi?",
+            "answer": "GNF tarmoq to'lovlari, steyking, boshqaruvda ishtirok etish va premium platforma imkoniyatlaridan foydalanish uchun ishlatiladi."
+          },
+          {
+            "question": "Nima uchun turli darajalar mavjud?",
+            "answer": "Turli darajalar turli investorlar ehtiyojlariga mos keladi: 1-daraja hamjamiyat a'zolari uchun, 2-daraja o'rta muddatli ushlab turuvchilar uchun, 3-daraja institutsional investorlar uchun."
+          },
+          {
+            "question": "Nima uchun vesting davri mavjud?",
+            "answer": "Vesting davrlari barqaror token taqsimotini va loyiha barqarorligini ta'minlaydi, darhol sotish bosimini oldini oladi va uzoq muddatli saqlashni rag'batlantiradi."
+          },
+          {
+            "question": "Steyking mavjud bo'ladimi?",
+            "answer": "Ha! Birinchi savdo raundi tugagandan so'ng steyking ishga tushiriladi, token egalari mukofotlar olishi mumkin bo'ladi."
+          },
+          {
+            "question": "Ijtimoiy tasdiqlash qanday ishlaydi?",
+            "answer": "1-daraja uchun ijtimoiy tasdiqlash hamjamiyat ishtirokini tekshirish uchun Twitter va Discord akkauntlarini ulashni talab qiladi. Bu faol hamjamiyat a'zolariga adolatli taqsimotni ta'minlaydi."
+          },
+          {
+            "question": "Bir nechta darajada qatnashish mumkinmi?",
+            "answer": "Ha, siz investitsiya strategiyangizni diversifikatsiya qilish va turli vesting jadvallaridan foydalanish uchun bir nechta darajada qatnashishingiz mumkin."
+          },
+          {
+            "question": "Vestingdan keyin nima bo'ladi?",
+            "answer": "Vesting davrlari tugagandan so'ng, tokenlar to'liq ochiladi va boshqaruv paneli orqali steyking, boshqaruv yoki boshqa maqsadlar uchun olinishi mumkin."
+          },
+          {
+            "question": "Tarmoq qanday himoyalangan?",
+            "answer": "GlobalNetwork yuqori xavfsizlik va samarali tranzaksiyalarni qayta ishlashni ta'minlovchi gibrid konsensus mexanizmlari bilan Proof of Authority (PoA) dan foydalanadi."
+          },
+          {
+            "question": "Token narxlari qanday?",
+            "answer": "1-daraja: $0.2/token, 2-daraja: $0.6/token, 3-daraja: $0.15/token. Turli narxlar vesting davrlari va ajratish hajmlarini aks ettiradi."
+          }
+        ]
+      }
+    ]
+  }
+}

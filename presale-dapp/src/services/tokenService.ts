@@ -1,7 +1,10 @@
-import { API_BASE_URL } from '../config/constants';
 import axios from 'axios';
 import { ethers } from 'ethers';
 import { SUPPORTED_NETWORKS } from '../config/networks';
+import { getNativeTokenPrice, convertNativeTokenToUSD, convertUSDToNativeToken } from './priceService';
+
+// Set API base URL manually
+const API_BASE_URL = 'https://api.gnfstore.com/api';
 
 export interface TokenStats {
     symbol: string;
@@ -27,7 +30,15 @@ export const getTokenStats = async (): Promise<TokenStats[]> => {
     return data.data;
 };
 
-// Update the purchaseToken function to handle paymentToken parameter
+export const getTokenPrice = (tokenSymbol: string): number => {
+    const TOKEN_PRICES = {
+        GNF10: 0.2,     // $0.20 per token
+        GNF1000: 0.6,   // $0.60 per token
+        GNF10000: 0.15  // $0.15 per token
+    };
+    return TOKEN_PRICES[tokenSymbol as keyof typeof TOKEN_PRICES] || 0;
+};
+
 export const purchaseToken = async (
     walletAddress: string,
     tokenSymbol: string,
@@ -36,20 +47,62 @@ export const purchaseToken = async (
     paymentToken: string // Now includes 'NATIVE'
 ): Promise<{ success: boolean; message?: string; data?: any }> => {
     try {
-        // Convert the USD amount to payment token amount considering decimals
-        const decimals = TOKEN_DECIMALS[paymentToken] || 18;
-        const parsedAmount = ethers.utils.parseUnits(amount.toString(), decimals);
+        const tokenPrice = getTokenPrice(tokenSymbol);
+        if (!tokenPrice) {
+            throw new Error('Invalid token symbol');
+        }
+
+        // Calculate tokens differently based on payment method
+        let usdAmount: number;
+        if (paymentToken === 'NATIVE') {
+            // Get real-time price and convert
+            usdAmount = await convertNativeTokenToUSD(amount.toString(), 'MATIC');
+            console.log('Native token conversion:', {
+                nativeAmount: amount,
+                currentPrice: await getNativeTokenPrice('MATIC'),
+                usdValue: usdAmount
+            });
+        } else {
+            // For USDT, amount is already in USD
+            usdAmount = amount;
+        }
+
+        // Calculate tokens based on USD value
+        const tokensToReceive = usdAmount / tokenPrice;
+
+        console.log('Purchase calculation:', {
+            paymentMethod: paymentToken,
+            nativeAmount: paymentToken === 'NATIVE' ? amount : null,
+            usdAmount,
+            tokenPrice,
+            tokensToReceive
+        });
+
+        // Convert tokens to wei (18 decimals)
+        const tokenAmountInWei = ethers.utils.parseUnits(
+            tokensToReceive.toFixed(8),
+            18
+        ).toString();
+
+        // Convert USD amount to smallest unit (6 decimals)
+        const usdAmountInSmallestUnit = Math.round(usdAmount * 1000000).toString();
+
+        console.log('Purchase details:', {
+            usdAmount,
+            tokenPrice,
+            tokensToReceive,
+            tokenAmountInWei
+        });
 
         const response = await axios.post(`${API_BASE_URL}/tokens/purchase`, {
             walletAddress,
             tokenSymbol,
-            amount: amount.toString(), // Original USD amount
-            tokenAmount: parsedAmount.toString(), // Token amount with decimals
+            amount: usdAmountInSmallestUnit, // USD amount in smallest unit
+            tokenAmount: tokenAmountInWei, // Actual token amount in wei
             paymentToken,
             paymentTxHash,
             referrer: null,
-            bonusAmount: amount * 0.02 // 2% bonus
-            // ...other data...
+            bonusAmount: Math.round(usdAmount * 0.02 * 1000000).toString() // Convert bonus to smallest unit too
         });
 
         if (response.data.success) {

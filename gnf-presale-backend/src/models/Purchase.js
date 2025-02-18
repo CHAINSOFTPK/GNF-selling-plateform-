@@ -45,6 +45,15 @@ const purchaseSchema = new mongoose.Schema({
         type: String,
         lowercase: true,
         sparse: true // Add sparse index
+    },
+    paymentVerificationTx: {
+        type: String,
+        required: true
+    },
+    paymentId: {
+        type: String,
+        required: true,
+        unique: true
     }
 });
 

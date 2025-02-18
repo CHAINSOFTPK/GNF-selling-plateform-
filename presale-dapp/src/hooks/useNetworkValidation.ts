@@ -1,19 +1,22 @@
-import { useChainId, useSwitchChain } from 'wagmi';
+import { useChainId } from 'wagmi';
 import { SUPPORTED_NETWORKS } from '../config/networks';
 
 export const useNetworkValidation = () => {
     const chainId = useChainId();
-    const { switchChain } = useSwitchChain();
 
-    const validateNetwork = (requiredChainId: number) => {
-        if (chainId !== requiredChainId) {
-            switchChain && switchChain({ chainId: requiredChainId });
-            return false;
-        }
-        return true;
+    const getCurrentNetwork = () => {
+        // This needs to match exactly, including when on GlobalNetwork
+        const network = Object.values(SUPPORTED_NETWORKS).find(net => net.chainId === chainId);
+        return network || null;
     };
 
-    const currentNetwork = Object.values(SUPPORTED_NETWORKS).find(net => net.chainId === chainId);
+    const currentNetwork = getCurrentNetwork();
 
-    return { validateNetwork, currentNetwork };
+    return {
+        currentNetwork,
+        chainId,
+        isValidNetwork: !!currentNetwork,
+        // Add this helper
+        getNetworkSymbol: () => currentNetwork?.nativeCoin || ''
+    };
 };

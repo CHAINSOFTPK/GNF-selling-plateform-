@@ -1,8 +1,8 @@
-import React from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Routes, Route, Outlet } from 'react-router-dom';
 import { ToastContainer, Slide } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import './styles/toast.css';
+import './styles/toast.css'; // Import custom toast styles
 import Header from './components/Header';
 import BuyTokens from './components/BuyTokens';
 import ReferralDashboard from './components/ReferralDashboard';
@@ -10,7 +10,10 @@ import { Web3Provider } from './context/Web3Context'; // Changed from WalletProv
 import Footer from './components/Footer';
 import Admin from "./components/AdminPage";
 import Bot from "./components/TelegramBuy";
-
+import Telegramdashboard from "./components/Telegramdashboard"; // Add this import
+import TelegramGuide from "./components/TelegramGuide"; // Add this import
+import HowToBuy from './components/HowToBuy'; // Add this import
+import MobileRedirect from './components/MobileRedirect'; // Add this import
 import { getDefaultWallets, RainbowKitProvider, darkTheme } from '@rainbow-me/rainbowkit';
 import { WagmiConfig } from 'wagmi';
 import { mainnet, polygon, avalanche, bsc } from 'wagmi/chains';
@@ -19,10 +22,11 @@ import { getDefaultConfig } from '@rainbow-me/rainbowkit';
 import '@rainbow-me/rainbowkit/styles.css';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
-// Define GNF Chain
+// Update GNF Chain configuration
 const gnfChain = {
   id: 1013,
   name: 'Global Network',
+  network: 'globalnetwork',
   nativeCurrency: {
     decimals: 18,
     name: 'GNF',
@@ -35,6 +39,7 @@ const gnfChain = {
   blockExplorers: {
     default: { name: 'Explorer', url: 'https://explorer.globalnetwork.foundation' },
   },
+  iconUrl: '/gnf.png', // Add GNF icon
 } as const;
 
 // Define Shopelia Testnet
@@ -67,14 +72,20 @@ const bscChain = {
   testnet: false
 };
 
-// Define Polygon Chain
+// Update the Polygon Chain configuration
 const polygonChain = {
   ...polygon,
+  name: 'Polygon',
+  nativeCurrency: {
+    name: 'MATIC',
+    symbol: 'MATIC',
+    decimals: 18
+  },
   rpcUrls: {
     public: { http: ['https://polygon-rpc.com'] },
     default: { http: ['https://polygon-rpc.com'] },
   },
-  iconUrl: '/polygon.png', // Add icon
+  iconUrl: '/polygon.png',
   testnet: false
 };
 
@@ -95,28 +106,30 @@ if (!projectId) {
   throw new Error('REACT_APP_WALLET_CONNECT_PROJECT_ID is not defined');
 }
 
-const config = getDefaultConfig({
+const queryClient = new QueryClient();
+
+// Create the Wagmi config outside component
+const wagmiConfig = getDefaultConfig({
   appName: 'GNF Presale',
-  projectId,
-  chains: [bscChain, polygonChain, avalancheChain],
+  projectId: process.env.REACT_APP_WALLET_CONNECT_PROJECT_ID || '',
+  chains: [bscChain, polygonChain, avalancheChain, gnfChain],
   transports: {
     [bscChain.id]: http(),
     [polygonChain.id]: http(),
     [avalancheChain.id]: http(),
+    [gnfChain.id]: http(),
   },
 });
 
-// Add this to set initial chain
-const initialChainId = bscChain.id;
-
-const queryClient = new QueryClient();
+// Update this line to use polygonChain as initial
+const initialChainId = polygonChain.id;
 
 const App: React.FC = () => {
     return (
         <QueryClientProvider client={queryClient}>
-            <WagmiConfig config={config}>
+            <WagmiConfig config={wagmiConfig}>
                 <RainbowKitProvider
-                    initialChain={initialChainId}  // Set initial chain here
+                    initialChain={initialChainId}
                     theme={darkTheme({
                         accentColor: '#0194FC',
                         borderRadius: 'medium'
@@ -124,59 +137,64 @@ const App: React.FC = () => {
                     showRecentTransactions={true}
                     coolMode
                 >
-                    <BrowserRouter>
+                    <div className="App">
                         <Routes>
-                            {/* Admin Routes */}
+                            {/* Admin Route */}
                             <Route path="/admin" element={<Admin />} />
-                            
-                            {/* User Routes wrapped with Web3Provider */}
-                            <Route
-                                path="/*"
-                                element={
-                                    <Web3Provider>
-                                        <div className="min-h-screen bg-gray-100 flex flex-col">
-                                            <Header />
-                                            <main className="flex-grow container mx-auto px-0 sm:px-4 py-4 sm:py-8 pt-[50px]">
-                                                <Routes>
-                                                    <Route path="/" element={<BuyTokens />} />
-                                                    <Route path="/referrals" element={<ReferralDashboard />} />
-                                                    <Route path="/:walletAddress" element={<BuyTokens />} />
-                                                    <Route path="/bot" element={<Bot />} />
-                                                </Routes>
-                                            </main>
-                                            <Footer />
-                                            <ToastContainer
-                                                position="top-right"
-                                                autoClose={4000}
-                                                hideProgressBar={false}
-                                                newestOnTop
-                                                closeOnClick
-                                                rtl={false}
-                                                pauseOnFocusLoss
-                                                draggable
-                                                pauseOnHover
-                                                theme="colored"
-                                                transition={Slide}
-                                                className="toast-container !p-4 sm:!p-6"
-                                                toastClassName="toast-item text-sm sm:text-base"
-                                                progressClassName="toast-progress"
-                                                limit={3}
-                                            />
-                                        </div>
-                                    </Web3Provider>
-                                }
-                            />
-                            <Route
-                                path="/bot"
-                                element={
-                                    <Web3Provider>
-                                        {/* Remove parent header and footer for the /bot route */}
-                                        <Bot />
-                                    </Web3Provider>
-                                }
-                            />
+
+                            {/* Mobile-specific routes */}
+                            <Route path="/bot" element={
+                                <Web3Provider><Bot /></Web3Provider>
+                            } />
+                            <Route path="/telegramdashboard" element={
+                                <Web3Provider><Telegramdashboard /></Web3Provider>
+                            } />
+                            <Route path="/telegramguide" element={
+                                <Web3Provider><TelegramGuide /></Web3Provider>
+                            } />
+
+                            {/* Desktop routes with shared layout */}
+                            <Route element={
+                                <Web3Provider>
+                                    <div className="min-h-screen bg-gray-100 flex flex-col">
+                                        <Header />
+                                        <main className="flex-grow container mx-auto px-0 sm:px-4 py-4 sm:py-8 pt-[50px]">
+                                            <Outlet />
+                                        </main>
+                                        <Footer />
+                                    </div>
+                                </Web3Provider>
+                            }>
+                                {/* Root path with mobile redirect */}
+                                <Route path="/" element={
+                                    <MobileRedirect>
+                                        <BuyTokens />
+                                    </MobileRedirect>
+                                } />
+                                <Route path="/referrals" element={<ReferralDashboard />} />
+                                <Route path="/howtobuy" element={<HowToBuy />} />
+                                <Route path="/:walletAddress" element={<BuyTokens />} />
+                            </Route>
                         </Routes>
-                    </BrowserRouter>
+
+                        <ToastContainer
+                            position="top-right"
+                            autoClose={4000}
+                            hideProgressBar={false}
+                            newestOnTop
+                            closeOnClick
+                            rtl={false}
+                            pauseOnFocusLoss
+                            draggable
+                            pauseOnHover
+                            theme="colored"
+                            transition={Slide}
+                            className="toast-container !p-4 sm:!p-6"
+                            toastClassName="toast-item text-sm sm:text-base"
+                            progressClassName="toast-progress"
+                            limit={3}
+                        />
+                    </div>
                 </RainbowKitProvider>
             </WagmiConfig>
         </QueryClientProvider>

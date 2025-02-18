@@ -28,19 +28,26 @@ import { SUPPORTED_NETWORKS } from '../config/networks';
 import { ReactComponent as BNBIcon } from '../assets/icons/bnb.svg';
 import { ReactComponent as MATICIcon } from '../assets/icons/matic.svg';
 import { ReactComponent as AVAXIcon } from '../assets/icons/avax.svg';
-import { convertNativeTokenToUSD } from '../services/priceService';
+import { convertNativeTokenToUSD, convertUSDToNativeToken } from '../services/priceService';
+import SocialVerificationModal from './modals/SocialVerificationModal';
+import PurchaseModal from './modals/PurchaseModal';
+import TokenCard from './TokenCard';
+import VectorButton from './VectorButton';
+import { showToast } from './CustomToast';
+import { switchToNetwork } from '../utils/network';
+import DashboardLoader from './DashboardLoader';
 
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'https://api.gnfstore.com/api';
+const API_BASE_URL = 'https://api.gnfstore.com/api';
 const TOKEN_CONFIGS: Record<string, TokenConfig> = {
     GNF10: {
-        symbol: 'GNF10',
+        symbol: 'GNF',
         price: 0.2,
         maxPerWallet: 200,
         totalSupply: 500000,
         requiresSocialVerification: true,
         description: 'For verified social media followers',
         bgColor: 'bg-[#0194FC]', // Simplified color
-        icon: <RiUserFollowLine className="text-3xl" />,
+        icon: <RiUserFollowLine className="text-3xl text-white" />,
         benefits: [
             'Early Access to Platform',
             'Community Voting Rights',
@@ -48,13 +55,13 @@ const TOKEN_CONFIGS: Record<string, TokenConfig> = {
         ]
     },
     GNF1000: {
-        symbol: 'GNF1000',
+        symbol: 'GNF',
         price: 0.6,
         totalSupply: 2000000,
         vestingPeriod: 365,
         description: '1 year vesting period',
         bgColor: 'bg-[#2563eb]', // Simplified color
-        icon: <RiTimeLine className="text-3xl" />,
+        icon: <RiTimeLine className="text-3xl text-white" />,
         benefits: [
             'Higher Staking Rewards',
             'Premium Features Access',
@@ -62,13 +69,13 @@ const TOKEN_CONFIGS: Record<string, TokenConfig> = {
         ]
     },
     GNF10000: {
-        symbol: 'GNF10000',
+        symbol: 'GNF',
         price: 0.15,
         totalSupply: 3000000,
         vestingPeriod: 1095,
         description: '3 years vesting period',
         bgColor: 'bg-[#7c3aed]', // Simplified color
-        icon: <RiLockLine className="text-3xl" />,
+        icon: <RiLockLine className="text-3xl text-white" />,
         benefits: [
             'Governance Rights',
             'Maximum Staking Benefits',
@@ -153,6 +160,30 @@ const BuyTokens: React.FC = () => {
     const [currentQuote, setCurrentQuote] = useState(0);
     const [usdValue, setUsdValue] = useState<string>('');
 
+    // Replace maxNativeAmount state with a function
+    const [maxNativeAmount, setMaxNativeAmount] = useState<string>('0');
+
+    const updateMaxNativeAmount = async () => {
+        if (!supportedNetwork) return;
+        try {
+            // Convert $40 to native token amount using real-time price
+            const maxAmount = await convertUSDToNativeToken(40, supportedNetwork.nativeCoin);
+            setMaxNativeAmount(maxAmount);
+            console.log(`Updated max ${supportedNetwork.nativeCoin} amount:`, maxAmount);
+        } catch (error) {
+            console.error('Error updating max native amount:', error);
+        }
+    };
+
+    // Update maxNativeAmount when network changes or every minute
+    useEffect(() => {
+        if (supportedNetwork) {
+            updateMaxNativeAmount();
+            const interval = setInterval(updateMaxNativeAmount, 60000); // Update every minute
+            return () => clearInterval(interval);
+        }
+    }, [supportedNetwork]);
+
     // 1) Define a mapping of token decimals
     const PAYMENT_TOKEN_DECIMALS: Record<string, number> = {
         USDT: 6,
@@ -180,8 +211,16 @@ const BuyTokens: React.FC = () => {
         if (!account) return;
         try {
             const balanceResponse = await axios.get(`${API_BASE_URL}/tokens/balance/${account}/GNF10`);
-            setCurrentGNF10Balance(balanceResponse.data.balance || 0);
-            setRemainingAllowance(200 - (balanceResponse.data.balance || 0));
+            const balance = balanceResponse.data.balance || 0;
+            
+            // Store the actual token amount (not Wei)
+            setCurrentGNF10Balance(balance);
+            setRemainingAllowance(200 - balance);
+            
+            console.log('Updated GNF10 balance:', {
+                balance,
+                remaining: 200 - balance
+            });
         } catch (error) {
             console.error('Error updating GNF10 balance:', error);
         }
@@ -357,8 +396,12 @@ const BuyTokens: React.FC = () => {
             if (selectedToken === 'GNF10' && account) {
                 try {
                     const response = await axios.get(`${API_BASE_URL}/tokens/balance/${account}/GNF10`);
-                    setCurrentGNF10Balance(response.data.balance || 0);
-                    setRemainingAllowance(200 - (response.data.balance || 0));
+                    // Store balance in wei
+                    const balanceInWei = response.data.balance || 0;
+                    setCurrentGNF10Balance(balanceInWei);
+                    // Convert to actual tokens for remaining calculation
+                    const actualBalance = balanceInWei / 1e18;
+                    setRemainingAllowance(200 - actualBalance);
                 } catch (error) {
                     console.error('Error fetching GNF10 balance:', error);
                 }
@@ -384,6 +427,12 @@ const BuyTokens: React.FC = () => {
             connectWallet();
             return;
         }
+
+        // Add network validation check
+        if (supportedNetwork?.nativeCoin === 'GNF') {
+            toast.error('Please switch to a supported payment network (BSC, Polygon, or Avalanche)');
+            return;
+        }
     
         if (token.requiresSocialVerification) {
             if (socialVerified) {
@@ -404,7 +453,7 @@ const BuyTokens: React.FC = () => {
                 await connectWallet();
             } catch (error) {
                 console.error('Failed to connect wallet:', error);
-                toast.error('Failed to connect wallet');
+                showToast({ message: 'Failed to connect wallet', type: 'error' });
             }
             return;
         }
@@ -412,7 +461,7 @@ const BuyTokens: React.FC = () => {
         // Change this part to handle social verification click
         if (tokenSymbol === 'GNF10' && !socialVerified) {
             if (verificationStatus === 'pending') {
-                toast.info('Your verification is in progress. Please wait.');
+                showToast({ message: 'Your verification is in progress. Please wait.', type: 'info' });
                 return;
             }
             // Show the social verification modal
@@ -441,10 +490,10 @@ const BuyTokens: React.FC = () => {
 
             await approveToken(paymentToken as TokenType, amount, chainId);
             setHasAllowance(true);
-            toast.success(`${paymentToken} approved successfully`);
+            showToast({ message: `${paymentToken} approved successfully`, type: 'success' });
         } catch (error: any) {
             console.error('Approval error:', error);
-            toast.error(error.message || 'Failed to approve token');
+            showToast({ message: error.message || 'Failed to approve token', type: 'error' });
             setHasAllowance(false);
         } finally {
             setIsApproving(false);
@@ -453,6 +502,13 @@ const BuyTokens: React.FC = () => {
 
     const handlePurchaseConfirm = async () => {
         if (!selectedToken || !amount || !account || !chainId) return;
+
+        // Add network validation check
+        if (supportedNetwork?.nativeCoin === 'GNF') {
+            toast.error('Please switch to a supported payment network (BSC, Polygon, or Avalanche)');
+            setSelectedToken(null);
+            return;
+        }
 
         setLoading(true);
         let transferToastId = null;
@@ -469,11 +525,27 @@ const BuyTokens: React.FC = () => {
                 throw new Error('Invalid amount');
             }
 
-            // GNF10 limit check using USD value
+            // GNF10 limit check with proper decimal conversion
             if (selectedToken === 'GNF10') {
-                const tokenAmount = usdAmount / TOKEN_CONFIGS.GNF10.price;
-                if (tokenAmount > remainingAllowance) {
-                    throw new Error(`Purchase would exceed maximum limit of 200 GNF10 tokens.`);
+                const tokenAmountToReceive = parseFloat(receivedAmount);
+                // Convert wei to actual token amount by dividing by 10^18
+                const currentBalance = currentGNF10Balance / 1e18;
+                const totalAfterPurchase = currentBalance + tokenAmountToReceive;
+                
+                console.log('GNF10 Purchase Check:', {
+                    currentBalance: currentBalance.toFixed(4),
+                    attemptingToBuy: tokenAmountToReceive.toFixed(4),
+                    totalAfterPurchase: totalAfterPurchase.toFixed(4),
+                    remainingAllowed: (200 - currentBalance).toFixed(4)
+                });
+
+                if (totalAfterPurchase > 200) {
+                    throw new Error(
+                        `Purchase would exceed maximum limit of 200 GNF10 tokens. ` +
+                        `Current balance: ${currentBalance.toFixed(4)}, ` +
+                        `Attempting to buy: ${tokenAmountToReceive.toFixed(4)}, ` +
+                        `Remaining allowed: ${(200 - currentBalance).toFixed(4)}`
+                    );
                 }
             }
 
@@ -504,10 +576,7 @@ const BuyTokens: React.FC = () => {
                 }
             }
 
-            transferToastId = toast.info('Transferring payment...', { 
-                autoClose: false, 
-                toastId: 'transfer' 
-            });
+            transferToastId = showToast({ message: 'Transferring payment...', type: 'info', duration: 0 });
 
             // Get chainId from network
             const currentChainId = chainId;
@@ -521,10 +590,7 @@ const BuyTokens: React.FC = () => {
                 txHash = await transferToken(paymentToken as TokenType, amount, chainId);
             }
 
-            toast.update(transferToastId, { 
-                render: 'Payment confirmed! Processing purchase...', 
-                type: 'info' 
-            });
+            showToast({ message: 'Payment confirmed! Processing purchase...', type: 'info' });
 
             // Process purchase
             const purchaseResult = await purchaseToken(
@@ -549,11 +615,23 @@ const BuyTokens: React.FC = () => {
     };
 
     const handlePurchaseSuccess = async (selectedToken: string) => {
-        toast.success(
-            selectedToken === 'GNF10' 
-                ? 'Tokens transferred successfully!' 
-                : 'Purchase successful! Tokens will be available after vesting period.'
-        );
+        showToast({
+            message: selectedToken === 'GNF10' 
+                ? '🎉 Tokens transferred successfully! To claim your tokens, please visit Dashboard'
+                : '🎉 Purchase successful! To claim your tokens after vesting period, please visit Dashboard',
+            type: 'success',
+            duration: 8000 // Increased duration to give users more time to read
+        });
+        
+        // Optional: Add a second toast with a clickable link
+        setTimeout(() => {
+            showToast({
+                message: '🔗 Click here to go to Dashboard',
+                type: 'info',
+                duration: 5000
+            });
+            // You could also programmatically navigate to dashboard here if clicked
+        }, 1000);
         
         setSelectedToken(null);
         setAmount('');
@@ -568,7 +646,11 @@ const BuyTokens: React.FC = () => {
 
     const handlePurchaseError = (error: any, toastId: string | number | null) => {
         if (toastId) toast.dismiss(toastId);
-        toast.error(error.message || 'Purchase failed');
+        showToast({
+            message: error.message || 'Purchase failed',
+            type: 'error',
+            duration: 6000
+        });
         console.error('Purchase error:', error);
     };
 
@@ -576,7 +658,7 @@ const BuyTokens: React.FC = () => {
         if (!account) return;
         
         if (hasSubmitted) {
-            toast.error('You have already submitted your handles. Verification is pending.');
+            showToast({ message: 'You have already submitted your handles. Verification is pending.', type: 'error' });
             return;
         }
         
@@ -586,15 +668,15 @@ const BuyTokens: React.FC = () => {
             if (response.success) {
                 setVerificationStatus('pending');
                 setHasSubmitted(true);
-                toast.success('Social handles submitted for verification');
+                showToast({ message: 'Social handles submitted for verification', type: 'success' });
                 setShowSocialModal(false);
             }
         } catch (error: any) {
             if (error.response && error.response.data.message === 'Already submitted') {
-                toast.error('You have already submitted your handles. Verification is pending.');
+                showToast({ message: 'You have already submitted your handles. Verification is pending.', type: 'error' });
                 setHasSubmitted(true);
             } else {
-                toast.error('Failed to submit social handles');
+                showToast({ message: 'Failed to submit social handles', type: 'error' });
             }
         } finally {
             setIsSubmitting(false);
@@ -602,29 +684,63 @@ const BuyTokens: React.FC = () => {
     };
 
     // Modify the amount change handler to validate GNF10 limits
-    const handleAmountChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const handleAmountChange = async (e: ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
-        if (value === '' || value === '0') {
+        
+        // Allow empty input
+        if (value === '') {
             setAmount('');
+            setUsdValue('0');
+            setReceivedAmount('0');
             return;
         }
-
-        const numericValue = safeParseFloat(value);
-        if (numericValue <= 0) {
+    
+        // Validate numeric input
+        const numericValue = parseFloat(value);
+        if (isNaN(numericValue) || numericValue < 0) {
             return;
         }
-        
-        if (selectedToken === 'GNF10') {
-            const tokenAmount = numericValue / TOKEN_CONFIGS.GNF10.price;
-            if (tokenAmount > remainingAllowance) {
-                toast.error(`Maximum remaining purchase allowed: ${remainingAllowance} GNF10 tokens`);
-                const maxAmount = remainingAllowance * TOKEN_CONFIGS.GNF10.price;
-                setAmount(maxAmount.toString());
-                return;
+    
+        // Check max amount for GNF10
+        if (selectedToken === 'GNF10' && numericValue > 40) {
+            setAmount('40');
+            return;
+        }
+    
+        try {
+            if (paymentToken === 'NATIVE' && supportedNetwork) {
+                // For native tokens, get USD value first
+                const usdAmount = await convertNativeTokenToUSD(value, supportedNetwork.nativeCoin);
+                
+                // Check if exceeds max USD amount (40 USD)
+                if (usdAmount > 40) {
+                    setAmount(maxNativeAmount);
+                    setUsdValue('40');
+                    return;
+                }
+    
+                setUsdValue(usdAmount.toFixed(2));
+            } else {
+                // For USDT, direct USD value
+                if (numericValue > 40) {
+                    setAmount('40');
+                    setUsdValue('40');
+                    return;
+                }
+                setUsdValue(value);
             }
+    
+            setAmount(value);
+            
+            // Calculate received tokens based on USD value
+            if (selectedToken) {
+                const tokenConfig = TOKEN_CONFIGS[selectedToken as keyof typeof TOKEN_CONFIGS];
+                const calculatedTokens = parseFloat(usdValue) / tokenConfig.price;
+                setReceivedAmount(calculatedTokens.toFixed(4));
+            }
+        } catch (error) {
+            console.error('Error converting amount:', error);
         }
-        
-        setAmount(value);
     };
 
     // Update the payment token change handler
@@ -666,449 +782,141 @@ const BuyTokens: React.FC = () => {
         return () => clearInterval(timer);
     }, []);
 
+    // Add this state for current card index
+    const [currentCardIndex, setCurrentCardIndex] = useState(0);
+
+    // Add these navigation functions
+    const nextCard = () => {
+        setCurrentCardIndex((prev) => (prev + 1) % tokenEntries.length);
+    };
+
+    const previousCard = () => {
+        setCurrentCardIndex((prev) => (prev - 1 + tokenEntries.length) % tokenEntries.length);
+    };
+
+    useEffect(() => {
+        const initializeNetwork = async () => {
+            // Only switch if not on any supported network
+            if (!supportedNetwork) {
+                try {
+                    await switchToNetwork(SUPPORTED_NETWORKS.POLYGON.chainId);
+                } catch (error) {
+                    console.error('Failed to switch network:', error);
+                }
+            }
+        };
+
+        initializeNetwork();
+    }, [chainId]);
+
+    if (loading) {
+        return <DashboardLoader />;
+    }
+
     return (
-        <div className="min-h-screen relative overflow-hidden">
-                        <div 
-                            className="fixed inset-0 z-0 bg-cover bg-center bg-no-repeat"
-                            style={{ backgroundImage: 'url("/bg.png")' }}
-                        />
+        <div className="min-h-screen relative overflow-hidden pb-16"> {/* Added pb-16 for footer space */}
+            <div 
+                className="fixed inset-0 z-0 bg-cover bg-center bg-no-repeat"
+                style={{ backgroundImage: 'url("/bg.png")' }}
+            />
 
-                        {/* Main Content */}
-            <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 py-12 mt-24">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    {tokenEntries.map((token, index) => (
-                        <motion.div
-                            key={token.key}
-                            initial={{ opacity: 0, y: 50 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ 
-                                duration: 0.5, 
-                                delay: index * 0.2,
-                                type: "spring",
-                                stiffness: 100 
-                            }}
-                            whileHover={{ 
-                                scale: 1.03,
-                                boxShadow: '0 0 30px rgba(54, 212, 199, 0.3)',
-                                transition: { duration: 0.2 } 
-                            }}
-                            className="relative group rounded-2xl overflow-hidden"
-                            style={{
-                                backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                                backdropFilter: 'blur(10px)',
-                                WebkitBackdropFilter: 'blur(10px)',
-                                border: '1px solid rgba(255, 255, 255, 0.18)',
-                                boxShadow: '0 8px 32px 0 rgba(54, 212, 199, 0.15)',
-                                transition: 'all 0.3s ease-in-out',
-                                transform: 'scale(0.85)' // Made cards even smaller
-                            }}
-                        >
-                            {/* Enhanced Card Header */}
-                            <div className="p-6" style={{ background: 'linear-gradient(to right, #0194FC, #300855)' }}> {/* Fixed background color */}
-                                <div className="flex items-center justify-between mb-4"> {/* Reduced margin */}
-                                    <h3 className="text-2xl font-bold text-white">{token.symbol}</h3> {/* Smaller text */}
-                                    <div className="bg-white/30 p-3 rounded-lg text-white"> {/* Added text-white */}
-                                        {React.isValidElement(TOKEN_CONFIGS[token.key].icon) && 
-                                            React.cloneElement(TOKEN_CONFIGS[token.key].icon as React.ReactElement<any>, { 
-                                                className: 'text-white text-3xl' 
-                                            })
-                                        }
-                                    </div>
-                                </div>
-                                <div className="flex items-baseline mb-4"> {/* Reduced margin */}
-                                    <span className="text-4xl font-extrabold text-white">${token.price}</span> {/* Smaller text */}
-                                    <span className="ml-2 text-white text-sm">{/* Changed text-white/80 to text-white */}per token</span> {/* Smaller text */}
-                                </div>
-                            </div>
+            {/* Main Content - Added top & bottom margin */}
+            <div className="relative z-10 max-w-xl mx-auto px-4 sm:px-6 py-6 mt-20 mb-8"> {/* Adjusted margins */}
+                {/* Enhanced Navigation Tabs */}
+                <div className="bg-[#0f172a]/90 p-2 rounded-2xl backdrop-blur-sm mb-8 border border-white/10 relative overflow-hidden">
+                    {/* Vector Background Pattern */}
+                    <div className="absolute inset-0">
+                        <svg className="w-full h-full opacity-5" viewBox="0 0 100 100" preserveAspectRatio="none">
+                            <path
+                                d="M0,0 L100,0 L90,100 L10,100 Z"
+                                fill="url(#grad)"
+                            />
+                            <defs>
+                                <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="0%">
+                                    <stop offset="0%" style={{ stopColor: '#0194FC' }} />
+                                    <stop offset="100%" style={{ stopColor: '#300855' }} />
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                    </div>
 
-                            {/* Enhanced Card Body */}
-                            <div className="bg-white/95 p-6 space-y-4"> {/* Reduced padding and spacing */}
-                                <div className="space-y-3"> {/* Reduced spacing */}
-                                    {/* Supply Info */}
-                                    <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg border border-gray-100"> {/* Adjusted styling */}
-                                        <span className="text-gray-600 text-sm font-medium">Supply</span>
-                                        <span className="text-teal-600 font-bold text-sm">{formatNumber(token.totalSupply)}</span>
-                                    </div>
-                                    
-                                    {/* Max per Wallet Info */}
-                                    {token.maxPerWallet && (
-                                        <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg border border-gray-100">
-                                            <span className="text-gray-600 text-sm font-medium">Max per wallet</span>
-                                            <span className="text-teal-600 font-bold text-sm">{token.maxPerWallet}</span>
-                                        </div>
-                                    )}
-                                    
-                                    {/* Vesting Period Info */}
-                                    {token.vestingPeriod && (
-                                        <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg border border-gray-100">
-                                            <span className="text-gray-600 text-sm font-medium">Vesting</span>
-                                            <span className="text-teal-600 font-bold text-sm">
-                                                {token.vestingPeriod === 365 ? '1 Year' : '3 Years'}
-                                            </span>
-                                        </div>
-                                    )}
-                                </div>
+                    <div className="flex justify-between items-center relative">
+                        {tokenEntries.map((token, index) => (
+                            <VectorButton
+                                key={token.key}
+                                variant="outline"
+                                isActive={currentCardIndex === index}
+                                onClick={() => setCurrentCardIndex(index)}
+                                className="flex-1 px-6 py-4"
+                            >
+                                <span>
+                                    {token.key === 'GNF10' && 'Tier 1'}
+                                    {token.key === 'GNF1000' && 'Tier 2'}
+                                    {token.key === 'GNF10000' && 'Tier 3'}
+                                </span>
+                                {currentCardIndex === index && (
+                                    <motion.div
+                                        layoutId="activeTab"
+                                        className="absolute inset-0 bg-gradient-to-r from-[#0194FC]/10 to-[#0182e0]/10 rounded-xl"
+                                        transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                                    />
+                                )}
+                            </VectorButton>
+                        ))}
+                    </div>
+                </div>
 
-                                {/* Enhanced Action Button */}
-                                <button
-                                    onClick={() => handleTokenButtonClick(token)}
-                                    disabled={isButtonDisabled(token)}
-                                    className={`
-                                        w-full py-3 px-4 rounded-lg font-bold text-sm
-                                        transition-all duration-300 ease-in-out transform
-                                        ${isButtonDisabled(token)
-                                            ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                                            : 'hover:bg-[#358F88] active:scale-95 shadow-lg hover:shadow-xl'
-                                        }
-                                    `}
-                                    style={{ 
-                                        backgroundColor: isButtonDisabled(token) ? '#D1D5DB' : '#0194FC',
-                                        color: isButtonDisabled(token) ? '#6B7280' : 'white'
-                                    }}
-                                >
-                                    {getButtonText(token)}
-                                </button>
-                            </div>
-                        </motion.div>
-                    ))}
+                {/* Vector-styled Token Card Container */}
+                <div className="relative">
+                    {/* Vector Background Accent */}
+                    <div className="absolute -inset-1">
+                        <div className="w-full h-full bg-gradient-to-r from-[#0194FC] to-[#300855] opacity-50 blur-lg" />
+                    </div>
+
+                    <TokenCard
+                        token={tokenEntries[currentCardIndex]}
+                        onBuyClick={() => handleTokenButtonClick(tokenEntries[currentCardIndex])}
+                        onVerifyClick={() => setShowSocialModal(true)}  // Add this prop
+                        isButtonDisabled={isButtonDisabled(tokenEntries[currentCardIndex])}
+                        getButtonText={getButtonText}
+                    />
                 </div>
             </div>
-
-          
-
 
             {/* Enhanced Purchase Modal */}
             <AnimatePresence>
                 {selectedToken && (
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 px-6 backdrop-blur-sm"
-                    >
-                        <motion.div
-                            initial={{ scale: 0.95, y: 20 }}
-                            animate={{ scale: 1, y: 0 }}
-                            exit={{ scale: 0.95, y: 20 }}
-                            className="bg-white rounded-3xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.3)] max-w-md w-full overflow-hidden"
-                        >
-                            {/* Modal Header */}
-                            <div className="px-8 py-8" style={{ backgroundColor: '#0194FC' }}>
-                                <div className="flex justify-between items-center">
-                                    <div>
-                                        <h3 className="text-4xl font-bold text-white mb-2">
-                                            {selectedToken}
-                                        </h3>
-                                       
-                                    </div>
-                                    <motion.button
-                                        whileHover={{ rotate: 90 }}
-                                        transition={{ duration: 0.2 }}
-                                        onClick={() => setSelectedToken(null)}
-                                        className="text-white/80 hover:text-white p-2 rounded-full hover:bg-white/10 transition-colors"
-                                    >
-                                        <FaTimes size={24} />
-                                    </motion.button>
-                                </div>
-                            </div>
-
-                            {/* Modal Body */}
-                            <div className="p-8 space-y-6 bg-white">
-                                {/* Amount Input */}
-                                <div className="space-y-2">
-                                    <label className="block text-sm font-semibold text-gray-700 mb-2">
-                                        Amount
-                                        {selectedToken === 'GNF10' && (
-                                            <span className="text-sm text-gray-400 ml-2">
-                                                (Max: {(remainingAllowance * TOKEN_CONFIGS.GNF10.price).toFixed(2)} USD)
-                                            </span>
-                                        )}
-                                    </label>
-                                    <div className="relative">
-                                        <input
-                                            type="number"
-                                            value={amount}
-                                            onChange={handleAmountChange}
-                                            className="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent text-lg transition-all duration-200"
-                                            placeholder="Enter amount"
-                                        />
-                                        <div className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">
-                                            <FaDollarSign size={20} />
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Payment Token Selection */}
-                                <div className="space-y-2">
-                                    <label className="block text-sm font-semibold text-gray-700">
-                                        Payment Token(ERC20) 
-                                    </label>
-                                    <div className="relative">
-                                        <select
-                                            value={paymentToken}
-                                            onChange={handlePaymentTokenChange}
-                                            className="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent text-lg appearance-none cursor-pointer transition-all duration-200"
-                                        >
-                                            {paymentOptions.map(option => (
-                                                <option key={option.symbol} value={option.type}>
-                                                    {option.symbol}
-                                                </option>
-                                            ))}
-                                        </select>
-                                        <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none flex items-center gap-2">
-                                            {paymentOptions.find(option => option.type === paymentToken)?.icon}
-                                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-                                            </svg>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Token Receipt Preview */}
-                                <div className="p-6 rounded-2xl shadow-lg" style={{ backgroundColor: '#0194FC' }}>
-                                    <p className="text-white text-sm font-medium mb-2">Amount in USD:</p>
-                                    <p className="text-2xl font-bold text-white mb-4">
-                                        ${parseFloat(usdValue || '0').toFixed(2)}
-                                    </p>
-                                    <p className="text-white text-sm font-medium mb-2">You will receive:</p>
-                                    <div className="flex items-baseline space-x-2">
-                                        <p className="text-4xl font-bold text-white">
-                                            {formatNumber(receivedAmount)}
-                                        </p>
-                                        <p className="text-xl text-white font-semibold">
-                                            {selectedToken}
-                                        </p>
-                                    </div>
-                                </div>
-
-                                {/* Action Buttons */}
-                                <div className="flex gap-4 pt-4">
-                                    <motion.button
-                                        whileHover={{ scale: 1.02 }}
-                                        whileTap={{ scale: 0.98 }}
-                                        onClick={() => setSelectedToken(null)}
-                                        className="flex-1 py-4 px-6 rounded-xl border-2 border-gray-200 text-gray-600 font-semibold hover:bg-gray-50 transition-all duration-200"
-                                    >
-                                        Cancel
-                                    </motion.button>
-                                    
-                                    {paymentToken === 'NATIVE' ? (
-                                        // For native tokens, show direct purchase button
-                                        <motion.button
-                                            whileHover={{ scale: 1.02 }}
-                                            whileTap={{ scale: 0.98 }}
-                                            onClick={handlePurchaseConfirm}
-                                            disabled={loading || !amount}
-                                            style={{ backgroundColor: '#0194FC' }}
-                                            className="flex-1 py-4 px-6 rounded-xl text-white font-semibold shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
-                                        >
-                                            {loading ? (
-                                                <span className="flex items-center justify-center space-x-2">
-                                                    <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
-                                                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                                                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                                                    </svg>
-                                                    <span>Processing...</span>
-                                                </span>
-                                            ) : (
-                                                'Confirm Purchase'
-                                            )}
-                                        </motion.button>
-                                    ) : (
-                                        // Show approve/confirm buttons for ERC20 tokens
-                                        !hasAllowance ? (
-                                            <motion.button
-                                                whileHover={{ scale: 1.02 }}
-                                                whileTap={{ scale: 0.98 }}
-                                                onClick={handleApprove}
-                                                disabled={isApproving || !amount}
-                                                style={{ backgroundColor: '#0194FC' }}
-                                                className="flex-1 py-4 px-6 rounded-xl text-white font-semibold shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
-                                            >
-                                                {isApproving ? (
-                                                    <span className="flex items-center justify-center space-x-2">
-                                                        <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
-                                                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                                                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                                                        </svg>
-                                                        <span>Approving...</span>
-                                                    </span>
-                                                ) : (
-                                                    `Approve ${paymentToken}`
-                                                )}
-                                            </motion.button>
-                                        ) : (
-                                            <motion.button
-                                                whileHover={{ scale: 1.02 }}
-                                                whileTap={{ scale: 0.98 }}
-                                                onClick={handlePurchaseConfirm}
-                                                disabled={loading || !amount}
-                                                style={{ backgroundColor: '#0194FC' }}
-                                                className="flex-1 py-4 px-6 rounded-xl text-white font-semibold shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
-                                            >
-                                                {loading ? (
-                                                    <span className="flex items-center justify-center space-x-2">
-                                                        <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
-                                                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                                                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                                                        </svg>
-                                                        <span>Processing...</span>
-                                                    </span>
-                                                ) : (
-                                                    'Confirm Purchase'
-                                                )}
-                                            </motion.button>
-                                        )
-                                    )}
-                                </div>
-                            </div>
-                        </motion.div>
-                    </motion.div>
+                    <PurchaseModal
+                        selectedToken={selectedToken}
+                        onClose={() => setSelectedToken(null)}
+                        amount={amount}
+                        onAmountChange={handleAmountChange}
+                        paymentToken={paymentToken}
+                        onPaymentTokenChange={handlePaymentTokenChange}
+                        usdValue={usdValue}
+                        receivedAmount={receivedAmount}
+                        loading={loading}
+                        isApproving={isApproving}
+                        hasAllowance={hasAllowance}
+                        onApprove={handleApprove}
+                        onPurchaseConfirm={handlePurchaseConfirm}
+                        paymentOptions={paymentOptions}
+                        maxAmount={paymentToken === 'NATIVE' ? maxNativeAmount : '40'}
+                    />
                 )}
             </AnimatePresence>
 
             {/* Updated Social Verification Modal */}
             <AnimatePresence>
                 {showSocialModal && (
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 px-6 backdrop-blur-sm"
-                    >
-                        <motion.div
-                            initial={{ scale: 0.95, y: 20 }}
-                            animate={{ scale: 1, y: 0 }}
-                            exit={{ scale: 0.95, y: 20 }}
-                            className="bg-white rounded-3xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.3)] max-w-md w-full overflow-hidden transform scale-90"
-                        >
-                            {/* Modal Header */}
-                            <div className="px-8 py-8" style={{ backgroundColor: '#300855' }}>
-                                <div className="flex justify-between items-center">
-                                    <div>
-                                        <h3 className="text-4xl font-bold text-white mb-2">
-                                            Social Verification
-                                        </h3>
-                                    </div>
-                                    <motion.button
-                                        whileHover={{ rotate: 90 }}
-                                        transition={{ duration: 0.2 }}
-                                        onClick={() => setShowSocialModal(false)}
-                                        className="text-white/80 hover:text-white p-2 rounded-full hover:bg-white/10 transition-colors"
-                                    >
-                                        <FaTimes size={24} />
-                                    </motion.button>
-                                </div>
-                            </div>
-
-                            {/* Modal Body */}
-                            <div className="p-8 space-y-6 bg-white">
-                                {/* Social Media Buttons */}
-                                <div className="grid grid-cols-2 gap-4">
-                                    <motion.a
-                                        whileHover={{ scale: 1.02 }}
-                                        whileTap={{ scale: 0.98 }}
-                                        href="https://twitter.com/megapayer"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        style={{ backgroundColor: '#300855' }}
-                                        className="py-4 px-6 text-white rounded-xl flex items-center justify-center gap-3 shadow-lg hover:shadow-xl transition-all duration-200"
-                                    >
-                                        <FaTwitter size={20} />
-                                        <span className="font-semibold">Twitter</span>
-                                    </motion.a>
-                                    <motion.a
-                                        whileHover={{ scale: 1.02 }}
-                                        whileTap={{ scale: 0.98 }}
-                                        href="https://discord.gg/NVqRsTnQ"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        style={{ backgroundColor: '#300855' }}
-                                        className="py-4 px-6 text-white rounded-xl flex items-center justify-center gap-3 shadow-lg hover:shadow-xl transition-all duration-200"
-                                    >
-                                        <FaDiscord size={20} />
-                                        <span className="font-semibold">Discord</span>
-                                    </motion.a>
-                                </div>
-
-                                {/* Input Fields */}
-                                <div className="space-y-4">
-                                    {/* Twitter Input */}
-                                    <div className="space-y-2">
-                                        <label className="block text-sm font-semibold text-gray-700">
-                                            Twitter Handle
-                                        </label>
-                                        <div className="relative">
-                                            <input
-                                                type="text"
-                                                value={twitterHandle}
-                                                onChange={(e) => setTwitterHandle(e.target.value)}
-                                                placeholder="@yourusername"
-                                                className="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent text-lg transition-all duration-200"
-                                            />
-                                            <div className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">
-                                                <FaTwitter size={20} />
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    {/* Discord Input */}
-                                    <div className="space-y-2">
-                                        <label className="block text-sm font-semibold text-gray-700">
-                                            Discord Handle
-                                        </label>
-                                        <div className="relative">
-                                            <input
-                                                type="text"
-                                                value={discordHandle}
-                                                onChange={(e) => setDiscordHandle(e.target.value)}
-                                                placeholder="username#0000"
-                                                className="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent text-lg transition-all duration-200"
-                                            />
-                                            <div className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">
-                                                <FaDiscord size={20} />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Action Button */}
-                                {hasSubmitted ? (
-                                    <div className="p-6 rounded-xl bg-yellow-50 border border-yellow-200">
-                                        <div className="flex items-start gap-4">
-                                            <div className="text-yellow-500 mt-1">
-                                                <AiOutlineFieldTime size={24} className="animate-spin" />
-                                            </div>
-                                            <p className="text-yellow-800 font-medium">
-                                                Verification in progress. Please wait while we verify your accounts.
-                                            </p>
-                                        </div>
-                                    </div>
-                                ) : (
-                                    <motion.button
-                                        whileHover={{ scale: 1.02 }}
-                                        whileTap={{ scale: 0.98 }}
-                                        onClick={handleSocialVerification}
-                                        disabled={isSubmitting || !twitterHandle || !discordHandle}
-                                        style={{ backgroundColor: '#300855' }}
-                                        className="w-full py-4 px-6 text-white rounded-xl font-semibold shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
-                                    >
-                                        {isSubmitting ? (
-                                            <span className="flex items-center justify-center gap-2">
-                                                <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
-                                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                                                </svg>
-                                                <span>Submitting...</span>
-                                            </span>
-                                        ) : (
-                                            'Submit for Verification'
-                                        )}
-                                    </motion.button>
-                                )}
-                            </div>
-                        </motion.div>
-                    </motion.div>
+                    <SocialVerificationModal
+                        isOpen={showSocialModal}
+                        onClose={() => setShowSocialModal(false)}
+                        account={account || ''}
+                        hasSubmitted={hasSubmitted}
+                        setHasSubmitted={setHasSubmitted}
+                        setVerificationStatus={setVerificationStatus}
+                    />
                 )}
             </AnimatePresence>
         </div>

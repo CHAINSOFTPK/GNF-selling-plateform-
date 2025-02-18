@@ -2,6 +2,8 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useAccount, useDisconnect, useChainId, useSwitchChain } from 'wagmi';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { SUPPORTED_NETWORKS } from '../config/networks';
+import { switchToNetwork } from '../utils/network';
+import { toast } from 'react-toastify';
 
 interface Web3ContextProps {
   referrer: string | null;
@@ -54,17 +56,24 @@ export const Web3Provider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   useEffect(() => {
-    if (!chainId) return;
-    
-    const isSupported = Object.values(SUPPORTED_NETWORKS).some(
-      net => net.chainId === chainId
-    );
+    const handleNetworkSwitch = async () => {
+      if (!chainId) return;
 
-    if (!isSupported && switchChain) {
-      // Switch to BSC by default if on unsupported network
-      switchChain({ chainId: SUPPORTED_NETWORKS.BSC.chainId });
-    }
-  }, [chainId, switchChain]);
+      const isOnGlobalNetwork = chainId === SUPPORTED_NETWORKS.GLOBALNETWORK.chainId;
+      const currentPath = window.location.pathname;
+
+      if (currentPath === '/referrals' && !isOnGlobalNetwork) {
+        try {
+          await switchToNetwork(SUPPORTED_NETWORKS.GLOBALNETWORK.chainId);
+        } catch (error: any) {
+          console.error('Failed to switch to GlobalNetwork:', error);
+          toast.error('Failed to switch network. Please switch manually.');
+        }
+      }
+    };
+
+    handleNetworkSwitch();
+  }, [chainId, window.location.pathname]);
 
   const value = {
     referrer,
@@ -83,4 +92,17 @@ export const Web3Provider: React.FC<{ children: React.ReactNode }> = ({ children
       {children}
     </Web3Context.Provider>
   );
+};
+
+// Add this network if it's not already added
+const GNF_NETWORK = {
+    chainId: '0x3F5', // 1013 in hex
+    chainName: 'GNF Network',
+    nativeCurrency: {
+        name: 'GNF',
+        symbol: 'GNF',
+        decimals: 18
+    },
+    rpcUrls: ['https://evm.globalnetwork.foundation/'],
+    blockExplorerUrls: ['https://explore.globalnetwork.foundation/']
 };

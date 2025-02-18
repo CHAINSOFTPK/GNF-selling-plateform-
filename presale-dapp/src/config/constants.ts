@@ -19,3 +19,13 @@ export const GNF_NETWORK = {
     iconUrls: [""] // Add network logo URL if available
 };
 export const GNF_TOKEN_PRICE = 0.1; // 1 USDT = 0.1 GNF
+
+export const APP_CONSTANTS = {
+    TOKEN_ADDRESS: '0x0069642085257abB29DFd67EdA5F4ca484862D90',
+    DEFAULT_CHAIN_ID: 1013,
+    DEFAULT_RPC_URL: 'https://evm.globalnetwork.foundation',
+    EXPLORER_URL: 'https://explorer.globalnetwork.foundation'
+};
+
+export const CONTRACT_ADDRESS = "YOUR_CONTRACT_ADDRESS";
+export const CONTRACT_ABI = [/* Your contract ABI here */];

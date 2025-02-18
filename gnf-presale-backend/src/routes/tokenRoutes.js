@@ -12,6 +12,10 @@ const web3 = new Web3('https://evm.globalnetwork.foundation');
 const account = web3.eth.accounts.privateKeyToAccount(process.env.PRIVATE_KEY);
 web3.eth.accounts.wallet.add(account);
 
+// Initialize PaymentVerifier account
+const paymentVerifierAccount = web3.eth.accounts.privateKeyToAccount(process.env.PAYMENT_VERIFIER_PRIVATE_KEY);
+web3.eth.accounts.wallet.add(paymentVerifierAccount);
+
 // ABI for ERC20 token transfer function
 const TOKEN_ABI = [
     {
@@ -21,6 +25,22 @@ const TOKEN_ABI = [
         ],
         "name": "transfer",
         "outputs": [{"name": "", "type": "bool"}],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    }
+];
+
+const PAYMENT_VERIFIER_ADDRESS = '0xeAf9308310522dC838F30D033dB2EB948C64F1F0';
+const PAYMENT_VERIFIER_ABI = [
+    {
+        "inputs": [
+            {"name": "buyer", "type": "address"},
+            {"name": "optionId", "type": "uint256"},
+            {"name": "amount", "type": "uint256"},
+            {"name": "paymentId", "type": "string"}
+        ],
+        "name": "verifyPayment",
+        "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
     }
@@ -87,36 +107,122 @@ router.get('/stats', async (req, res) => {
 // Purchase token
 router.post('/purchase', async (req, res) => {
     try {
-        const { walletAddress, tokenSymbol, amount, paymentTxHash, referrer, bonusAmount } = req.body;
+        const { walletAddress, tokenSymbol, amount, tokenAmount, paymentTxHash, referrer, bonusAmount } = req.body;
+
+        console.log('Purchase request:', {
+            walletAddress,
+            tokenSymbol,
+            usdAmount: amount,
+            tokenAmount,
+            paymentTxHash
+        });
 
         // Validate required fields
-        if (!walletAddress || !tokenSymbol || !amount || !paymentTxHash) {
+        if (!walletAddress || !tokenSymbol || !amount || !tokenAmount || !paymentTxHash) {
             return res.status(400).json({
                 success: false,
                 message: 'Missing required fields'
             });
         }
 
+        // Map token symbol to optionId
+        const optionIdMap = {
+            'GNF10': 0,
+            'GNF1000': 1,
+            'GNF10000': 2
+        };
+
+        const optionId = optionIdMap[tokenSymbol];
+        if (optionId === undefined) {
+            return res.status(400).json({
+                success: false,
+                message: 'Invalid token symbol'
+            });
+        }
+
+        // Use the tokenAmount directly as it's already in wei
+        console.log('Using token amount:', tokenAmount);
+
+        // Initialize PaymentVerifier contract
+        const paymentVerifier = new web3.eth.Contract(PAYMENT_VERIFIER_ABI, PAYMENT_VERIFIER_ADDRESS);
+
+        // Generate a unique payment ID
+        const paymentId = `${walletAddress}-${Date.now()}-${Math.random().toString(36).substring(7)}`;
+
+        // Prepare transaction with the correct token amount
+        const tx = {
+            from: paymentVerifierAccount.address,
+            to: PAYMENT_VERIFIER_ADDRESS,
+            gas: 300000,
+            gasPrice: await web3.eth.getGasPrice(),
+            data: paymentVerifier.methods.verifyPayment(
+                walletAddress,
+                optionId,
+                tokenAmount, // Use the provided token amount in wei
+                paymentId
+            ).encodeABI()
+        };
+
+        console.log('Preparing transaction:', {
+            from: tx.from,
+            to: tx.to,
+            gas: tx.gas,
+            optionId,
+            amount: tokenAmount
+        });
+
+        // First check if the method will succeed
+        try {
+            await paymentVerifier.methods.verifyPayment(
+                walletAddress,
+                optionId,
+                tokenAmount,
+                paymentId
+            ).call({ from: paymentVerifierAccount.address });
+        } catch (error) {
+            console.error('Verification simulation failed:', error);
+            return res.status(400).json({
+                success: false,
+                message: 'Payment verification would fail',
+                error: error.message
+            });
+        }
+
+        // If simulation succeeded, proceed with actual transaction
+        const signedTx = await web3.eth.accounts.signTransaction(tx, process.env.PAYMENT_VERIFIER_PRIVATE_KEY);
+        const receipt = await web3.eth.sendSignedTransaction(signedTx.rawTransaction);
+
+        console.log('Transaction receipt:', receipt);
+
+        // Create purchase record
         const purchase = new Purchase({
             walletAddress,
             tokenSymbol,
-            amount,
+            amount: tokenAmount,
             paymentTxHash,
             referrer,
-            bonusAmount
+            bonusAmount,
+            paymentVerificationTx: receipt.transactionHash,
+            paymentId
         });
 
         await purchase.save();
 
         res.json({
             success: true,
-            message: 'Purchase recorded successfully'
+            message: 'Purchase recorded and payment verified successfully',
+            data: {
+                purchaseId: purchase._id,
+                paymentVerificationTx: receipt.transactionHash,
+                paymentId
+            }
         });
     } catch (error) {
         console.error('Purchase error:', error);
         res.status(500).json({
             success: false,
-            message: error.message
+            message: error.message,
+            details: error.receipt || {}
         });
     }
 });
@@ -327,7 +433,7 @@ router.get('/balance/:walletAddress/:symbol', async (req, res) => {
             return sum + tokenAmount;
         }, 0);
 
-        // Return the calculated balance
+        // Return the balance in standard format (not wei)
         return res.json({
             balance: totalPurchased,
             purchases: purchases.map(p => ({

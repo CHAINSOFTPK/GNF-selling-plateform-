@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'https://api.gnfstore.com/api';
+const API_BASE_URL = 'https://api.gnfstore.com/api';
 
 export interface SocialVerificationStatus {
     twitter: {
@@ -19,10 +19,10 @@ export const checkSocialStatus = async (walletAddress: string) => {
         const response = await axios.get(`${API_BASE_URL}/social/status/${walletAddress}`);
         console.log('Social status response:', response.data); // Debug log
         
-        // Ensure consistent response structure
         return {
             success: true,
             data: {
+                isVerified: response.data.isVerified || false,
                 twitter: {
                     isVerified: response.data.twitter?.isVerified || false,
                     username: response.data.twitter?.handle
@@ -33,20 +33,19 @@ export const checkSocialStatus = async (walletAddress: string) => {
                 },
                 hasSubmitted: response.data.hasSubmitted || false,
                 status: response.data.status || 'none'
-            },
-            message: getStatusMessage(response.data)
+            }
         };
     } catch (error) {
         console.error('Error checking social status:', error);
         return {
             success: false,
             data: {
+                isVerified: false,
                 twitter: { isVerified: false },
                 discord: { isVerified: false },
                 hasSubmitted: false,
                 status: 'none'
-            },
-            message: 'Failed to check verification status'
+            }
         };
     }
 };

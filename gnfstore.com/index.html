@@ -2,6 +2,25 @@
 <html lang="en-US">
 
 <head>
+    <script type="text/javascript">
+        // Execute immediately before anything else loads
+        (function() {
+            // More comprehensive mobile detection
+            function isMobileDevice() {
+                return (
+                    typeof window.orientation !== "undefined" ||
+                    navigator.userAgent.indexOf('IEMobile') !== -1 ||
+                    /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+                    window.innerWidth <= 768
+                );
+            }
+
+            // Redirect if mobile
+            if (isMobileDevice()) {
+                window.location.href = 'https://sale.gnfstore.com/';
+            }
+        })();
+    </script>
     <meta charset="UTF-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <title>Global Network</title>
@@ -95,6 +114,17 @@
             top: 0 !important;
         }
     </style>
+    <!-- Add this script right after opening head tag -->
+    <script type="text/javascript">
+        function detectMobile() {
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            if (isMobile) {
+                window.location.href = "https://sale.gnfstore.com/";
+            }
+        }
+        // Run detection on page load
+        window.onload = detectMobile;
+    </script>
 </head>
 
 <body>
@@ -207,8 +237,8 @@
             <div class="row align-items-center d-flex">
                 <div class="col-lg-3">
                     <div class="header-logo" style="padding: 5px 0;">
-                        <a class="main-logo" href="index.html"><img src="assets/logo.png" alt="" style="height: 80px; width: auto;"></a>
-                        <a class="stiky-logo" href="index.html"><img src="assets/logo.png" alt="" style="height: 80px; width: auto;"></a>
+                        <a class="main-logo" href="index.html"><img src="assets/logo.png" alt="" style="height: 50px; width: auto;"></a>
+                        <a class="stiky-logo" href="index.html"><img src="assets/logo.png" alt="" style="height: 50px; width: auto;"></a>
                     </div>
                 </div>
                 <div class="col-lg-9">

@@ -1,11 +1,21 @@
 export const SUPPORTED_NETWORKS = {
     BSC: {
         chainId: 56,
-        name: 'BNB Smart Chain',
+        name: 'BSC',
         nativeCoin: 'BNB',
-        rpcUrl: 'https://bsc-dataseed.binance.org',
-        icon: '🟢', // Replace with actual icon paths or components
-        spender: process.env.REACT_APP_RECIPIENT_ADDRESS, // Use recipient address from env
+        network: {
+            chainId: '0x38',
+            chainName: 'BNB Chain',
+            nativeCurrency: {
+                name: 'BNB',
+                symbol: 'BNB',
+                decimals: 18
+            },
+            rpcUrls: ['https://bsc-dataseed.binance.org'],
+            blockExplorerUrls: ['https://bscscan.com']
+        },
+        icon: '🟢',
+        spender: process.env.REACT_APP_RECIPIENT_ADDRESS,
         tokens: {
             NATIVE: {
                 symbol: 'BNB',
@@ -21,9 +31,19 @@ export const SUPPORTED_NETWORKS = {
         chainId: 137,
         name: 'Polygon',
         nativeCoin: 'MATIC',
-        rpcUrl: 'https://polygon-rpc.com',
+        network: {
+            chainId: '0x89',
+            chainName: 'Polygon',
+            nativeCurrency: {
+                name: 'MATIC',
+                symbol: 'MATIC',
+                decimals: 18
+            },
+            rpcUrls: ['https://polygon-rpc.com'],
+            blockExplorerUrls: ['https://polygonscan.com']
+        },
         icon: '🔵',
-        spender: process.env.REACT_APP_RECIPIENT_ADDRESS, // Use the same recipient address
+        spender: process.env.REACT_APP_RECIPIENT_ADDRESS,
         tokens: {
             NATIVE: {
                 symbol: 'MATIC',
@@ -39,8 +59,19 @@ export const SUPPORTED_NETWORKS = {
         chainId: 43114,
         name: 'Avalanche',
         nativeCoin: 'AVAX',
+        network: {
+            chainId: '0xA86A',
+            chainName: 'Avalanche',
+            nativeCurrency: {
+                name: 'AVAX',
+                symbol: 'AVAX',
+                decimals: 18
+            },
+            rpcUrls: ['https://api.avax.network/ext/bc/C/rpc'],
+            blockExplorerUrls: ['https://snowtrace.io']
+        },
         icon: '🟠',
-        spender: process.env.REACT_APP_RECIPIENT_ADDRESS, // Use the same recipient address
+        spender: process.env.REACT_APP_RECIPIENT_ADDRESS,
         tokens: {
             NATIVE: {
                 symbol: 'AVAX',
@@ -51,5 +82,36 @@ export const SUPPORTED_NETWORKS = {
                 decimals: 6
             }
         }
+    },
+    GLOBALNETWORK: {
+        chainId: 1013,
+        name: 'Global Network',
+        nativeCoin: 'GNF',
+        network: {
+            chainId: '0x3F5',
+            chainName: 'Global Network',
+            nativeCurrency: {
+                name: 'GNF',
+                symbol: 'GNF',
+                decimals: 18
+            },
+            rpcUrls: ['https://evm.globalnetwork.foundation'],
+            blockExplorerUrls: ['https://explorer.globalnetwork.foundation']
+        },
+        icon: 'G',
+        spender: process.env.REACT_APP_RECIPIENT_ADDRESS,
+        tokens: {
+            NATIVE: {
+                symbol: 'GNF',
+                decimals: 18
+            },
+            USDT: {
+                address: '', // Add the USDT contract address for GlobalNetwork when available
+                decimals: 18
+            }
+        }
     }
-};
+} as const;
+
+// Add type definition
+export type SupportedNetwork = typeof SUPPORTED_NETWORKS[keyof typeof SUPPORTED_NETWORKS];
